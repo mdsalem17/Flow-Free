@@ -9,24 +9,24 @@ import java.util.Observable;
 import java.util.Observer;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import jeu.Grille;
-import mvc.Modele;
 
 /**
  *
@@ -35,68 +35,75 @@ import mvc.Modele;
 public class VueControleur extends Application {
     
     Modele m;
-    Grille g;
-    Color couleur[];
     
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage stage) {
 
         // initialisation du modèle que l'on souhaite utiliser
         m = new Modele();
-        g = new Grille();
-        g.init();
-        couleur = new Color[7];
-        couleur[0] = Color.LIGHTBLUE;
-        couleur[1] = Color.BLUE;
-        couleur[2] = Color.GREEN;
         
-        // gestion du placement (permet de palcer le champ Text affichage en haut, et GridPane gPane au centre)
-        BorderPane border = new BorderPane();
-
         // permet de placer les diffrents boutons dans une grille
-        GridPane gPane = new GridPane();
+        Circle[][] tabCircles = new Circle[m.jeu.grille.getTaille()][m.jeu.grille.getTaille()];
 
-        Text[][] tabText = new Text[5][5];
+        stage.setTitle("Flow Free");
 
-        Text affichage = new Text("Lignes");
-        affichage.setFont(Font.font("Verdana", 30));
-        affichage.setFill(Color.RED);
-        border.setTop(affichage);
+        GridPane grid = new GridPane();
+        grid.getStyleClass().add("game-grid");
+        grid.setAlignment(Pos.CENTER);
 
-        // la vue observe les "update" du modèle, et réalise les mises à jour graphiques
         m.addObserver(new Observer() {
 
             @Override
             public void update(Observable o, Object arg) {
-                // TODO
-            }
-        });
+                
+                //Do things...
 
-        for (int column = 0; column < g.getTaille(); column++) {
-            for (int row = 0; row < g.getTaille(); row++) {
-
+        for (int column = 0; column < m.jeu.grille.getTaille(); column++) {
+            for (int row = 0; row < m.jeu.grille.getTaille(); row++) {
+                
                 final int fColumn = column;
                 final int fRow = row;
-                final int c = g.getCase(row,column);
-                final Text t = new Text(" " + c + " ");
-                tabText[column][row] = t;
-                t.setFill(couleur[c]);
-                t.setFont(Font.font("Verdana", 25));
+                final int c = m.jeu.grille.getCase(row,column).getId();
                 
+                Circle circle = new Circle();
+                if(m.jeu.grille.isChemin(row,column)){
+                    circle.setRadius(20.0f);
+                    circle.setScaleX(0.4);
+                    circle.setScaleY(2);
+                }else{
+                    circle.setRadius(20.0f);
+                    circle.setScaleX(0.8);
+                    circle.setScaleY(0.8);
+                }
+                circle.setFill(m.couleur[Math.abs(c)]);
+                tabCircles[column][row] = circle;
+                Pane pane = new Pane();
                 
-                t.setOnDragDetected(new EventHandler<MouseEvent>() {
+                pane.getStyleClass().add("game-grid-cell");
+                if (column == 0) {
+                    pane.getStyleClass().add("first-column");
+                }
+                if (row == 0) {
+                    pane.getStyleClass().add("first-row");
+                }
+                grid.add(pane, column, row);
+                
+                circle.setOnDragDetected(new EventHandler<MouseEvent>() {
                     public void handle(MouseEvent event) {
 
-                        Dragboard db = t.startDragAndDrop(TransferMode.ANY);
-                        ClipboardContent content = new ClipboardContent();       
-                        content.putString(""); // non utilisé actuellement
-                        db.setContent(content);
-                        event.consume();
-                        m.startDD(fColumn, fRow);
+                        //Detecter si le drag commence d'une case Symbole ou pas
+                        if(m.jeu.grille.isSymbol(fRow, fColumn)){
+                            Dragboard db = circle.startDragAndDrop(TransferMode.ANY);
+                            ClipboardContent content = new ClipboardContent();       
+                            content.putString(""); // non utilisé actuellement
+                            db.setContent(content);
+                            event.consume();
+                            m.startDD(fColumn, fRow);
+                        }
                     }
                 });
 
-                t.setOnDragEntered(new EventHandler<DragEvent>() {
+                circle.setOnDragEntered(new EventHandler<DragEvent>() {
                     public void handle(DragEvent event) {
                         
                         m.parcoursDD(fColumn, fRow);
@@ -104,36 +111,114 @@ public class VueControleur extends Application {
                     }
                 });
                 
-                t.setOnDragDone(new EventHandler<DragEvent>() {
+                circle.setOnDragDone(new EventHandler<DragEvent>() {
                     public void handle(DragEvent event) {
                         
                         // attention, le setOnDragDone est déclenché par la source du Drag&Drop
-                        
                         m.stopDD(fColumn, fRow);
                         
                     }
                 });
-
-                gPane.add(tabText[column][row], column, row);
+                /*Rectangle rect = new Rectangle(column,row,20,40);
+                rect.setFill(Color.WHITE);
+                rect.setX(column+10);
+                grid.add(rect, column, row);*/
+                grid.add(tabCircles[column][row], column, row);
             }
         }
 
-        gPane.setGridLinesVisible(true);
+            }
+        });
+        
+        for(int i = 0; i < m.jeu.grille.getTaille(); i++) {
+            ColumnConstraints column = new ColumnConstraints(40);
+            grid.getColumnConstraints().add(column);
+        }
 
-        border.setCenter(gPane);
+        for(int i = 0; i < m.jeu.grille.getTaille(); i++) {
+            RowConstraints row = new RowConstraints(40);
+            grid.getRowConstraints().add(row);
+        }
 
-        Scene scene = new Scene(border, Color.LIGHTBLUE);
+        for (int column = 0; column < m.jeu.grille.getTaille(); column++) {
+            for (int row = 0; row < m.jeu.grille.getTaille(); row++) {
+                
+                final int fColumn = column;
+                final int fRow = row;
+                final int c = m.jeu.grille.getCase(row,column).getId();
+                
+                Circle circle = new Circle();
+                if(m.jeu.grille.isChemin(row,column)){
+                    circle.setRadius(20.0f);
+                    circle.setScaleX(0.4);
+                    circle.setScaleY(2);
+                }else{
+                    circle.setRadius(20.0f);
+                    circle.setScaleX(0.8);
+                    circle.setScaleY(0.8);
+                }
+                circle.setFill(m.couleur[Math.abs(c)]);
+                tabCircles[column][row] = circle;
+                Pane pane = new Pane();
+                
+                pane.getStyleClass().add("game-grid-cell");
+                if (column == 0) {
+                    pane.getStyleClass().add("first-column");
+                }
+                if (row == 0) {
+                    pane.getStyleClass().add("first-row");
+                }
+                grid.add(pane, column, row);
+                
+                circle.setOnDragDetected(new EventHandler<MouseEvent>() {
+                    public void handle(MouseEvent event) {
 
-        primaryStage.setTitle("Drag & Drop");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+                        //Detecter si le drag commence d'une case Symbole ou pas
+                        if(m.jeu.grille.isSymbol(fRow, fColumn)){
+                            Dragboard db = circle.startDragAndDrop(TransferMode.ANY);
+                            ClipboardContent content = new ClipboardContent();       
+                            content.putString(""); // non utilisé actuellement
+                            db.setContent(content);
+                            event.consume();
+                            m.startDD(fColumn, fRow);
+                        }
+                    }
+                });
+
+                circle.setOnDragEntered(new EventHandler<DragEvent>() {
+                    public void handle(DragEvent event) {
+                        
+                        m.parcoursDD(fColumn, fRow);
+                        event.consume();
+                    }
+                });
+                
+                circle.setOnDragDone(new EventHandler<DragEvent>() {
+                    public void handle(DragEvent event) {
+                        
+                        // attention, le setOnDragDone est déclenché par la source du Drag&Drop
+                        m.stopDD(fColumn, fRow);
+                        
+                    }
+                });
+                /*Rectangle rect = new Rectangle(column,row,20,40);
+                rect.setFill(Color.WHITE);
+                rect.setX(column+10);
+                grid.add(rect, column, row);*/
+                grid.add(tabCircles[column][row], column, row);
+            }
+        }
+
+        Scene scene = new Scene(grid, (m.jeu.grille.getTaille() * 40) + 100, (m.jeu.grille.getTaille() * 40) + 100, Color.BLACK);
+        scene.getStylesheets().add("mvc/game.css");
+        stage.setScene(scene);
+        stage.show();
     }
-
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         launch(args);
-    }
-    
+    }    
 }

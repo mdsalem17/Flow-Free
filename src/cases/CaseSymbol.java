@@ -11,8 +11,8 @@ package cases;
  */
 public class CaseSymbol extends Case{
         
-    public CaseSymbol(int _id){
-        super(_id);
+    public CaseSymbol(int _id, int _x, int _y){
+        super(_id, _x, _y);
     }
 
 }

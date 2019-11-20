@@ -17,9 +17,11 @@ public class Grille {
     
     private Case plateau[][];
     private int n;
+    private int nbCaseSymbol;
     
     public Grille(){
-        n = 3;
+        n = 10;
+        nbCaseSymbol = 0;
         plateau = new Case[n][n];
     }
     
@@ -27,21 +29,46 @@ public class Grille {
         return n;
     }
     
-    public int getCase(int x, int y){
-        return plateau[x][y].getId();
+    public int getNbCaseSymbol(){
+        return nbCaseSymbol;
+    }
+    
+    public Case getCase(int x, int y){
+        return plateau[x][y];
+    }
+    
+    public boolean isSymbol(int x, int y){
+        return (plateau[x][y] instanceof CaseSymbol);
+    }
+    
+    public boolean isChemin(int x, int y){
+        return (plateau[x][y] instanceof CaseChemin);
+    }
+    
+    public void setCaseId(int _id, int x, int y){
+        plateau[x][y].setId(_id);
     }
     
     public void init(){
+        initCaseSymbol();
+        
         for(int i = 0; i < n; i++){
             for(int j = 0 ; j < n; j++){
-                plateau[i][j] = new Case(0) {};
+                if(!(plateau[i][j] instanceof CaseSymbol))
+                    plateau[i][j] = new CaseChemin(0, i ,j) {};
+                else
+                    nbCaseSymbol++;
             }
         }
-        plateau[0][0].setId(1);
-        plateau[2][1].setId(1);
+        nbCaseSymbol = nbCaseSymbol/2;        
+    }
+    
+    private void initCaseSymbol(){
+        plateau[0][0] = new CaseSymbol(1, 0, 0) {};
+        plateau[2][1] = new CaseSymbol(1, 2, 1) {};
         
-        plateau[0][2].setId(2);
-        plateau[n-1][n-1].setId(2);
+        plateau[0][2] = new CaseSymbol(2, 0, 2) {};
+        plateau[n-1][n-1] = new CaseSymbol(2, n-1, n-1) {};
     }
 
     @Override

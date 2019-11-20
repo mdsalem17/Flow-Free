@@ -11,8 +11,8 @@ package cases;
  */
 public class CaseChemin extends Case{
         
-    public CaseChemin(int _id){
-        super(_id);
+    public CaseChemin(int _id, int _x, int _y){
+        super(_id, _x, _y);
     }
 
     

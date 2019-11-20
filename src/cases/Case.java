@@ -9,20 +9,16 @@ package cases;
  *
  * @author Khaled
  */
-public abstract class Case {
+public class Case {
     
     private int id;
+    private int x;
+    private int y;
 
-    public Case(int _id){
+    public Case(int _id, int _x, int _y){
         this.id = _id;
-    }
-    
-    public boolean isSymbol(Case c){
-        return (c instanceof CaseSymbol);
-    }
-    
-    public boolean isChemin(Case c){
-        return (c instanceof CaseChemin);
+        this.x = _x;
+        this.y = _y;
     }
     
     public void setId(int _id){
@@ -31,5 +27,21 @@ public abstract class Case {
     
     public int getId(){
         return this.id;
+    }
+    
+    public void setX(int _x){
+        this.x = _x;
+    }
+    
+    public int getX(){
+        return this.x;
+    }
+    
+    public void setY(int _y){
+        this.y = _y;
+    }
+    
+    public int getY(){
+        return this.y;
     }
 }
