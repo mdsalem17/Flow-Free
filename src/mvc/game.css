@@ -1,0 +1,27 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 15, 2019, 11:21:57 PM
+    Author     : Khaled
+*/
+
+.game-grid {
+    -fx-background-color: black ;
+    -fx-padding: 10 ;
+}
+.game-grid-cell {
+    -fx-background-color: white, black ;
+    -fx-background-insets: 0, 0 1 1 0 ;
+}
+.game-grid-cell.first-row {
+    -fx-background-insets: 0, 1 1 1 0 ;
+}
+.game-grid-cell.first-column {
+    -fx-background-insets: 0, 0 1 1 1 ;
+}
+.game-grid-cell.first-row.first-column {
+    -fx-background-insets: 0, 1 ;
+}
