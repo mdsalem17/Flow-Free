@@ -14,6 +14,7 @@ public class CaseChemin extends Case{
     public CaseChemin(int _id, int _x, int _y){
         super(_id, _x, _y);
     }
-
+    // id= 0 si elle est libre
+    // id= - idCaseSymbol de la case mère
     
 }

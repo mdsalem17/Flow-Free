@@ -6,37 +6,35 @@
 package jeu;
 
 import cases.Case;
+import cases.CaseChemin;
+import cases.CaseSymbol;
+import java.util.ArrayList;
 
 /**
  *
  * @author Khaled
  */
 public class Chemin {
-    private Case caseDebut;
-    private Case caseFin;
+    private ArrayList<Case> trajet;
+
     
-    public Chemin(Case _caseDebut, Case _caseFin){
-        caseDebut = _caseDebut;
-        caseFin = _caseFin;
+    public Chemin(){
+        trajet = new ArrayList<Case>() {};
     }
     
-    public Case getCaseDebut(){
-        return caseDebut;
+    public Chemin(CaseSymbol _caseDebut){
+        trajet = new ArrayList<Case>();
     }
     
-    public void setCaseDebut(Case _case){
-        caseDebut = _case;
+    public Case getChemineFin(){
+        return trajet.get(trajet.size()-1);
     }
     
-    public Case getCaseFin(){
-        return caseFin;
+    public boolean ajouter(Case _case, int id){
+        if( _case.getId()==0 || _case.getId()==id){
+            trajet.add(_case);
+            return true;
+        } else return false;        
     }
     
-    public void setCaseFin(Case _case){
-        caseFin = _case;
-    }
-    
-    public boolean chemainValide(Case case1, Case case2){
-        return (( (case1.getId() == case2.getId()) || (case1.getId() == 0 || case2.getId() == 0) ) && case1 != case2);
-    }
 }

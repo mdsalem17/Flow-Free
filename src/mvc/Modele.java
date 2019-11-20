@@ -59,7 +59,6 @@ public class Modele extends Observable {
         if((caseDebutCourant.getId() == jeu.grille.getCase(lastR, lastC).getId()) || jeu.grille.getCase(lastR, lastC).getId() < 0){
             //jeu.setCheminCourant(caseDebutCourant, jeu.grille.getCase(r, c));
             
-            jeu.setTabChemin(caseDebutCourant.getId()-1, caseDebutCourant, jeu.grille.getCase(lastR, lastC));
             System.out.println("chemin etabli");
         }
         System.out.println("partie gagner "+jeu.partieTerminee());
@@ -76,6 +75,8 @@ public class Modele extends Observable {
         setChanged();
         notifyObservers();
     }
+    
+    
    
 
 }

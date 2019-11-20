@@ -23,22 +23,18 @@ public class JeuLignes {
     public JeuLignes(){
         grille = new Grille();
         grille.init();
-        cheminCourant = new Chemin(null, null);
-        System.out.println("nb case symbole dans const = "+grille.getNbCaseSymbol());
+        cheminCourant = new Chemin();
+        System.out.println("nb case symbole dans const = " + grille.getNbCaseSymbol());
         tabChemins = new Chemin[grille.getNbCaseSymbol()];
         initTabChemin();
     }
     
     private void initTabChemin(){
         for(int i = 0 ; i < grille.getNbCaseSymbol(); i++){
-            tabChemins[i] = new Chemin(null, null);
+            tabChemins[i] = new Chemin();
         }
     }
-    
-    public void setTabChemin(int index, Case caseDebut, Case caseFin){
-        tabChemins[index].setCaseDebut(caseDebut);
-        tabChemins[index].setCaseFin(caseFin);
-    }
+
     
     public boolean partieTerminee(){
         for(int i = 0; i < grille.getTaille(); i++){
