@@ -44,4 +44,16 @@ public class Case {
     public int getY(){
         return this.y;
     }
+
+    @Override
+    public boolean equals(Object object){
+        if(this == object)
+            return true;
+        if(object instanceof Case){
+            Case case1 = (Case) object;
+            return (this.x == case1.getX() && this.y == case1.getY());
+        }
+        return false;
+    }
+    
 }

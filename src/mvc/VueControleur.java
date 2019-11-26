@@ -25,6 +25,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
@@ -35,15 +36,20 @@ import javafx.stage.Stage;
 public class VueControleur extends Application {
     
     Modele m;
+    int lastCaseR, lastCaseC;
     
     @Override
     public void start(Stage stage) {
 
         // initialisation du modèle que l'on souhaite utiliser
         m = new Modele();
+        lastCaseR = 0;
+        lastCaseC = 0;
         
         // permet de placer les diffrents boutons dans une grille
         Circle[][] tabCircles = new Circle[m.jeu.grille.getTaille()][m.jeu.grille.getTaille()];
+        Line[][] tabLines = new Line[m.jeu.grille.getTaille()][m.jeu.grille.getTaille()];
+        Rectangle[][] tabRects = new Rectangle[m.jeu.grille.getTaille()][m.jeu.grille.getTaille()];
 
         stage.setTitle("Flow Free");
 
@@ -66,27 +72,52 @@ public class VueControleur extends Application {
                 final int c = m.jeu.grille.getCase(row,column).getId();
                 
                 Circle circle = new Circle();
-                if(m.jeu.grille.isChemin(row,column)){
+                Line line = new Line();
+                Rectangle rect = new Rectangle(0, 0, 38, 38);
+                
+                if(c > 0){
                     circle.setRadius(20.0f);
-                    circle.setScaleX(0.4);
-                    circle.setScaleY(2);
+                    circle.setScaleX(0.8);
+                    circle.setScaleY(0.8);
+                    lastCaseR = row;
+                    lastCaseC = column;
+                    circle.setFill(m.couleur[Math.abs(c)]);
+                    line.setStartX(0.0);
+                    line.setStartY(0.0); 
+                    line.setEndX(0.0); 
+                    line.setEndY(0.0);
+                    circle.setFill(m.couleur[Math.abs(c)]);
                 }else{
                     circle.setRadius(20.0f);
                     circle.setScaleX(0.8);
                     circle.setScaleY(0.8);
+                    circle.setFill(m.couleur[0]);
+                    line.setStartX(0.0); 
+                    line.setStartY(100.0); 
+                    line.setEndX(25.0);
+                    line.setEndY(100.0);
+                    line.setStroke(m.couleur[Math.abs(c)]);
                 }
-                circle.setFill(m.couleur[Math.abs(c)]);
+                rect.setFill(m.backgroundCouleur[Math.abs(c)]);
+                
+                line.setStrokeWidth(15);
+                tabLines[column][row] = line; 
                 tabCircles[column][row] = circle;
+                tabRects[column][row] = rect;
                 Pane pane = new Pane();
                 
                 pane.getStyleClass().add("game-grid-cell");
-                if (column == 0) {
+                if(column == 0){
                     pane.getStyleClass().add("first-column");
                 }
-                if (row == 0) {
+                if(row == 0){
                     pane.getStyleClass().add("first-row");
                 }
+                    
                 grid.add(pane, column, row);
+                grid.add(tabRects[column][row], column, row);
+                grid.add(tabLines[column][row], column, row);
+                grid.add(tabCircles[column][row], column, row);
                 
                 circle.setOnDragDetected(new EventHandler<MouseEvent>() {
                     public void handle(MouseEvent event) {
@@ -116,14 +147,9 @@ public class VueControleur extends Application {
                         
                         // attention, le setOnDragDone est déclenché par la source du Drag&Drop
                         m.stopDD(fColumn, fRow);
-                        
                     }
                 });
-                /*Rectangle rect = new Rectangle(column,row,20,40);
-                rect.setFill(Color.WHITE);
-                rect.setX(column+10);
-                grid.add(rect, column, row);*/
-                grid.add(tabCircles[column][row], column, row);
+                
             }
         }
 
@@ -201,16 +227,13 @@ public class VueControleur extends Application {
                         
                     }
                 });
-                /*Rectangle rect = new Rectangle(column,row,20,40);
-                rect.setFill(Color.WHITE);
-                rect.setX(column+10);
-                grid.add(rect, column, row);*/
                 grid.add(tabCircles[column][row], column, row);
             }
         }
 
         Scene scene = new Scene(grid, (m.jeu.grille.getTaille() * 40) + 100, (m.jeu.grille.getTaille() * 40) + 100, Color.BLACK);
         scene.getStylesheets().add("mvc/game.css");
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }

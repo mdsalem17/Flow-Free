@@ -20,7 +20,7 @@ public class Grille {
     private int nbCaseSymbol;
     
     public Grille(){
-        n = 10;
+        n = 3;
         nbCaseSymbol = 0;
         plateau = new Case[n][n];
     }
