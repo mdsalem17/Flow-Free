@@ -10,6 +10,7 @@ import java.util.Observer;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -26,6 +27,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
@@ -48,7 +50,7 @@ public class VueControleur extends Application {
         
         // permet de placer les diffrents boutons dans une grille
         Circle[][] tabCircles = new Circle[m.jeu.grille.getTaille()][m.jeu.grille.getTaille()];
-        Line[][] tabLines = new Line[m.jeu.grille.getTaille()][m.jeu.grille.getTaille()];
+        Polyline[][] tabLines = new Polyline[m.jeu.grille.getTaille()][m.jeu.grille.getTaille()];
         Rectangle[][] tabRects = new Rectangle[m.jeu.grille.getTaille()][m.jeu.grille.getTaille()];
 
         stage.setTitle("Flow Free");
@@ -72,29 +74,23 @@ public class VueControleur extends Application {
                 final int c = m.jeu.grille.getCase(fRow, fColumn).getId();
                 final int pos = m.jeu.grille.getCase(fRow, fColumn).getPosition();
                 
-                Circle circle = new Circle();
-                Line line = new Line();
-                Rectangle rect = new Rectangle(0, 0, 38, 38);
+                Circle circle = new Circle(20, 20, 20);
+                Polyline line = new Polyline();
+                Rectangle rect = new Rectangle(0, 0, 58, 58);
                 
                 if(c > 0){
-                    circle.setRadius(20.0f);
-                    circle.setScaleX(0.8);
-                    circle.setScaleY(0.8);
                     circle.setFill(m.couleur[Math.abs(c)]);
-                    line.setStartX(0.0);
-                    line.setStartY(0.0); 
-                    line.setEndX(0.0); 
-                    line.setEndY(0.0);
+                    line.getPoints().addAll(new Double[]{
+                       0.0, 0.0,
+                       0.0, 0.0
+                    });
                     circle.setFill(m.couleur[Math.abs(c)]);
                 }else{
-                    circle.setRadius(20.0f);
-                    circle.setScaleX(0.8);
-                    circle.setScaleY(0.8);
                     circle.setFill(m.couleur[0]);
-                    line.setStartX(0.0); 
-                    line.setStartY(100.0); 
-                    line.setEndX(25.0);
-                    line.setEndY(100.0);
+                    line.getPoints().addAll(new Double[]{
+                       0.0, 100.0,
+                       42.0, 100.0
+                    });
                     line.setStroke(m.couleur[Math.abs(c)]);
                 }
                 if(m.jeu.grille.getCase(row,column).getCrossed())
@@ -107,10 +103,6 @@ public class VueControleur extends Application {
                     line.setRotate(-45);
                 }else if(pos == 4){
                     //need to change column and row!!!!!!!!!!!!
-                    tabLines[fColumn][fRow].setStartX(0.0); 
-                    tabLines[fColumn][fRow].setStartY(100.0); 
-                    tabLines[fColumn][fRow].setEndX(5.0);
-                    tabLines[fColumn][fRow].setEndY(100.0);
                     line.setRotate(45);
                 }
                 line.setStrokeWidth(15);
@@ -126,7 +118,10 @@ public class VueControleur extends Application {
                 if(row == 0){
                     pane.getStyleClass().add("first-row");
                 }
-                    
+                
+                grid.setHalignment(circle, HPos.CENTER);
+                grid.setHalignment(line, HPos.CENTER);
+                grid.setHalignment(rect, HPos.CENTER);
                 grid.add(pane, column, row);
                 grid.add(tabRects[column][row], column, row);
                 grid.add(tabLines[column][row], column, row);
@@ -170,12 +165,12 @@ public class VueControleur extends Application {
         });
         
         for(int i = 0; i < m.jeu.grille.getTaille(); i++) {
-            ColumnConstraints column = new ColumnConstraints(40);
+            ColumnConstraints column = new ColumnConstraints(60);
             grid.getColumnConstraints().add(column);
         }
 
         for(int i = 0; i < m.jeu.grille.getTaille(); i++) {
-            RowConstraints row = new RowConstraints(40);
+            RowConstraints row = new RowConstraints(60);
             grid.getRowConstraints().add(row);
         }
 
@@ -186,16 +181,7 @@ public class VueControleur extends Application {
                 final int fRow = row;
                 final int c = m.jeu.grille.getCase(row,column).getId();
                 
-                Circle circle = new Circle();
-                if(m.jeu.grille.isChemin(row,column)){
-                    circle.setRadius(20.0f);
-                    circle.setScaleX(0.4);
-                    circle.setScaleY(2);
-                }else{
-                    circle.setRadius(20.0f);
-                    circle.setScaleX(0.8);
-                    circle.setScaleY(0.8);
-                }
+                Circle circle = new Circle(20, 20, 20);
                 circle.setFill(m.couleur[Math.abs(c)]);
                 tabCircles[column][row] = circle;
                 Pane pane = new Pane();
@@ -240,11 +226,12 @@ public class VueControleur extends Application {
                         
                     }
                 });
+                grid.setHalignment(circle, HPos.CENTER);
                 grid.add(tabCircles[column][row], column, row);
             }
         }
 
-        Scene scene = new Scene(grid, (m.jeu.grille.getTaille() * 40) + 100, (m.jeu.grille.getTaille() * 40) + 100, Color.BLACK);
+        Scene scene = new Scene(grid, (m.jeu.grille.getTaille() * 60) + 100, (m.jeu.grille.getTaille() * 60) + 100, Color.BLACK);
         scene.getStylesheets().add("mvc/game.css");
         stage.setResizable(false);
         stage.setScene(scene);
