@@ -19,7 +19,6 @@ public class JeuLignes {
     public JeuLignes(){
         grille = new Grille();
         grille.init();
-        System.out.println("nb case symbole dans const = " + grille.getNbCaseSymbol());
         tabChemins = new Chemin[grille.getNbCaseSymbol()];
         initTabChemin();
     }
@@ -64,17 +63,14 @@ public class JeuLignes {
                     //bottom corner
                     if(tabChemins[caseCourant.getId()-1].trajet.get(i).getY() > tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()
                             && grille.getCase(tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX(), tabChemins[caseCourant.getId()-1].trajet.get(i).getY()).getId() == 0){
-                        System.err.println("i if");
                         tabChemins[caseCourant.getId()-1].ajouter(i+1, new Case(-(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getId())), tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX(), tabChemins[caseCourant.getId()-1].trajet.get(i).getY()));
                     }
                     //upper corner
                     else if(grille.getCase(tabChemins[caseCourant.getId()-1].trajet.get(i).getX(), tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()).getId() == 0){
-                        System.err.println("i else if");
                         tabChemins[caseCourant.getId()-1].ajouter(i+1, new Case(-(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getId())), tabChemins[caseCourant.getId()-1].trajet.get(i).getX(), tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()));
                     }
                     //ca't add corer
                     else{
-                        System.err.println("i else");
                         tabChemins[caseCourant.getId()-1].ajustTrajet(i);
                         appliquerChemin();
                     }
@@ -92,19 +88,17 @@ public class JeuLignes {
     }
     
     public void appliquerChemin(){
-        /*for(int i = 0 ; i < tabChemins[0].getTrajetSize(); i++){
-            grille.setCaseId(tabChemins[0].getCaseTrajet(i).getId(), tabChemins[0].getCaseTrajet(i).getX(), tabChemins[0].getCaseTrajet(i).getY());
-        }*/
-        
         int _id;
         for(int k = 0; k < tabChemins.length; k++){
             for(int i = 0; i < tabChemins[k].getTrajetSize(); i++){
                 _id = grille.getCase(tabChemins[k].getCaseTrajet(i).getX(), tabChemins[k].getCaseTrajet(i).getY()).getId();
                 if(_id < 0 && _id != tabChemins[k].getCaseTrajet(i).getId()){
-                    System.err.println("passed condition");
                     tabChemins[k].ajustTrajet(i+1);
                 }
                 grille.setCaseId(tabChemins[k].getCaseTrajet(i).getId(), tabChemins[k].getCaseTrajet(i).getX(), tabChemins[k].getCaseTrajet(i).getY());
+                grille.getCase(tabChemins[k].getCaseTrajet(i).getX(), tabChemins[k].getCaseTrajet(i).getY())
+                        .setPosition(tabChemins[k].getCheminShape(i));
+
                          
             }
         }

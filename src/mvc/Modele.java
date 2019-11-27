@@ -55,6 +55,7 @@ public class Modele extends Observable {
             for(int j = 0; j < jeu.grille.getTaille(); j++){
                 if(jeu.grille.isChemin(i, j) && (caseDebutCourant.getId() == -jeu.grille.getCase(i, j).getId()))
                     jeu.grille.setCaseId(0, i, j);
+                    jeu.grille.getCase(i, j).setCrossed(false);
                     jeu.tabChemins[caseDebutCourant.getId()-1].viderChemin();
             }
         }
@@ -73,10 +74,6 @@ public class Modele extends Observable {
             jeu.tabChemins[caseDebutCourant.getId()-1].removeDuplicate();
             jeu.modifTrajet(caseDebutCourant, canBeDragged);
             jeu.appliquerChemin();
-            /*
-            if(jeu.grille.getCase(currentR, currentR).getId() != caseDebutCourant.getId() && jeu.grille.isSymbol(r, c)){
-                jeu.tabChemins[caseDebutCourant.getId()-1].modifierChemin(new Case(jeu.grille.getCase(currentR, currentC).getId(), currentR, currentC));
-            }*/
             currentR = r;
             currentC = c;
         }
@@ -88,7 +85,9 @@ public class Modele extends Observable {
         System.out.println("partie gagner "+jeu.partieTerminee());
         System.out.print("Trajet Size = "+jeu.tabChemins[caseDebutCourant.getId()-1].getTrajetSize()+"\n[");
         for(int i = 0; i < jeu.tabChemins[caseDebutCourant.getId()-1].getTrajetSize() ; i++){
-            System.out.print("( ("+jeu.tabChemins[caseDebutCourant.getId()-1].getCaseTrajet(i).getId()+"), "+jeu.tabChemins[caseDebutCourant.getId()-1].getCaseTrajet(i).getX()+", "+jeu.tabChemins[caseDebutCourant.getId()-1].getCaseTrajet(i).getY()+"), ");
+            System.out.print("( ("+jeu.tabChemins[caseDebutCourant.getId()-1].getCaseTrajet(i).getId()+"), "
+                    +jeu.tabChemins[caseDebutCourant.getId()-1].getCaseTrajet(i).getX()+", "+
+                    jeu.tabChemins[caseDebutCourant.getId()-1].getCaseTrajet(i).getY()+" ("+jeu.tabChemins[caseDebutCourant.getId()-1].getCaseTrajet(i).getPosition()+") ), ");
         }
         System.out.print("]");
     }

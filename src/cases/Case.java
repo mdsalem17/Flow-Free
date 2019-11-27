@@ -14,11 +14,15 @@ public class Case {
     private int id;
     private int x;
     private int y;
+    private boolean crossed;
+    private int position;
 
     public Case(int _id, int _x, int _y){
         this.id = _id;
         this.x = _x;
         this.y = _y;
+        crossed = false;
+        position = 0;
     }
     
     public void setId(int _id){
@@ -44,7 +48,23 @@ public class Case {
     public int getY(){
         return this.y;
     }
+    
+    public void setCrossed(boolean _crossed){
+        this.crossed = _crossed;
+    }
+    
+    public boolean getCrossed(){
+        return crossed;
+    }
 
+    public void setPosition(int _position){
+        this.position = _position;
+    }
+    
+    public int getPosition(){
+        return this.position;
+    }
+    
     @Override
     public boolean equals(Object object){
         if(this == object)

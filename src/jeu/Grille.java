@@ -20,7 +20,7 @@ public class Grille {
     private int nbCaseSymbol;
     
     public Grille(){
-        n = 3;
+        n = 10;
         nbCaseSymbol = 0;
         plateau = new Case[n][n];
     }
@@ -46,6 +46,11 @@ public class Grille {
     }
     
     public void setCaseId(int _id, int x, int y){
+        if(_id != 0){
+            plateau[x][y].setCrossed(true);
+        }else{
+            plateau[x][y].setCrossed(false);
+        }
         plateau[x][y].setId(_id);
     }
     

@@ -64,4 +64,33 @@ public class Chemin {
         }else throw new IndexOutOfBoundsException("Error: IndexOutOfBoundsException");
     }
     
+    public int getCheminShape(int indice){
+        if(indice > 0 && indice < trajet.size()){
+            int x1 = trajet.get(indice-1).getX();
+            int y1= trajet.get(indice-1).getY();
+            
+            int x2 = trajet.get(indice).getX();
+            int y2 = trajet.get(indice).getY();
+            
+            //possible corer
+            if(trajet.size() - indice > 1){
+                int x3 = trajet.get(indice+1).getX();
+                int y3 = trajet.get(indice+1).getY();
+                
+                //upper left corner
+                if((x1 == (x3-1) && y1 == (y3+1) || x1 == (x3+1) && y1 == (y3-1)) && (x1 == x2 || x2 == x3) && (y1 == y2 || y2 == y3))
+                    return 3;
+                //upper rigt corner
+                else if((x1 == (x3-1) && y1 == (y3-1) || x1 == (x3+1) && y1 == (y3+1)) && (x1 == x2 || x2 == x3) && (y1 == y2 || y2 == y3))
+                    return 4;
+            }
+            
+            if(x1 == x2 && y1 != y2)
+                return 1;
+            else if(x1 != x2 && y1 == y2)
+                return 2;
+        }
+        return 0;
+    }
+    
 }

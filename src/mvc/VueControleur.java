@@ -69,7 +69,8 @@ public class VueControleur extends Application {
                 
                 final int fColumn = column;
                 final int fRow = row;
-                final int c = m.jeu.grille.getCase(row,column).getId();
+                final int c = m.jeu.grille.getCase(fRow, fColumn).getId();
+                final int pos = m.jeu.grille.getCase(fRow, fColumn).getPosition();
                 
                 Circle circle = new Circle();
                 Line line = new Line();
@@ -79,8 +80,6 @@ public class VueControleur extends Application {
                     circle.setRadius(20.0f);
                     circle.setScaleX(0.8);
                     circle.setScaleY(0.8);
-                    lastCaseR = row;
-                    lastCaseC = column;
                     circle.setFill(m.couleur[Math.abs(c)]);
                     line.setStartX(0.0);
                     line.setStartY(0.0); 
@@ -98,8 +97,22 @@ public class VueControleur extends Application {
                     line.setEndY(100.0);
                     line.setStroke(m.couleur[Math.abs(c)]);
                 }
-                rect.setFill(m.backgroundCouleur[Math.abs(c)]);
-                
+                if(m.jeu.grille.getCase(row,column).getCrossed())
+                    rect.setFill(m.backgroundCouleur[Math.abs(c)]);
+                if(pos == 1){
+                    line.setRotate(0);
+                }else if(pos == 2){
+                    line.setRotate(-90);
+                }else if(pos == 3){
+                    line.setRotate(-45);
+                }else if(pos == 4){
+                    //need to change column and row!!!!!!!!!!!!
+                    tabLines[fColumn][fRow].setStartX(0.0); 
+                    tabLines[fColumn][fRow].setStartY(100.0); 
+                    tabLines[fColumn][fRow].setEndX(5.0);
+                    tabLines[fColumn][fRow].setEndY(100.0);
+                    line.setRotate(45);
+                }
                 line.setStrokeWidth(15);
                 tabLines[column][row] = line; 
                 tabCircles[column][row] = circle;
