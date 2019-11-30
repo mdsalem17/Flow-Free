@@ -19,6 +19,8 @@ public class JeuLignes {
     public JeuLignes(){
         grille = new Grille();
         grille.init();
+        System.out.println(grille.toString());
+        System.out.println(grille.getNbCaseSymbol());
         tabChemins = new Chemin[grille.getNbCaseSymbol()];
         initTabChemin();
     }
@@ -114,6 +116,19 @@ public class JeuLignes {
             }
         }
         return true;
+    }
+    
+    public String selectLevel(int size){
+        switch (size) {
+            case 3:
+                return "level_3x3";
+            case 4:
+                return "level_4x4";
+            case 5:
+                return "level_5x5";
+            default:
+                return "no such level";
+        }
     }
     
 }

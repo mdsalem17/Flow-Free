@@ -9,6 +9,13 @@ import cases.Case;
 import cases.CaseSymbol;
 import cases.CaseChemin;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Scanner;
+
 /**
  *
  * @author Khaled
@@ -20,7 +27,7 @@ public class Grille {
     private int nbCaseSymbol;
     
     public Grille(){
-        n = 5;
+        n = 4;
         nbCaseSymbol = 0;
         plateau = new Case[n][n];
     }
@@ -55,6 +62,7 @@ public class Grille {
     }
     
     public void init(){
+        /*
         initCaseSymbol();
         
         for(int i = 0; i < n; i++){
@@ -65,7 +73,22 @@ public class Grille {
                     nbCaseSymbol++;
             }
         }
-        nbCaseSymbol = nbCaseSymbol/2;        
+        nbCaseSymbol = nbCaseSymbol/2;
+        */
+        
+        int[][] grid = readGridFromFile(n,2);
+        for(int i=0; i<grid.length; i++){
+            for(int j=0; j<grid.length; j++){
+                if(grid[i][j]==0) {
+                    plateau[i][j] = new CaseChemin(grid[i][j], i, j);
+                } else {
+                    plateau[i][j] = new CaseSymbol(grid[i][j], i, j);
+                    nbCaseSymbol++;
+                }
+            }
+        }
+        nbCaseSymbol = nbCaseSymbol/2;
+        System.out.println(Arrays.deepToString(grid));
     }
     
     private void initCaseSymbol(){
@@ -74,6 +97,31 @@ public class Grille {
         
         plateau[0][2] = new CaseSymbol(2, 0, 2) {};
         plateau[n-1][n-1] = new CaseSymbol(2, n-1, n-1) {};
+    }
+    
+    public static int[][] readGridFromFile(int gridSize, int gridNumber){
+        int[][] grid = new int[gridSize][gridSize];
+        FileReader inputFile;
+
+        try {
+            inputFile = new FileReader(".\\ressources\\level_" + gridSize + "x" + gridSize
+                    +"\\" + gridNumber + ".txt") ;
+            Scanner sc = new Scanner(new BufferedReader(inputFile));
+            while (sc.hasNextLine()) {
+                for (int i = 0; i < gridSize; i++) {
+                    String[] line = sc.nextLine().trim().split(" ");
+                    for (int j = 0; j < gridSize; j++) {
+                        grid[i][j] = Integer.parseInt(line[j]);
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return grid;
     }
 
     @Override

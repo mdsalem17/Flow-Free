@@ -31,11 +31,19 @@ public class Modele extends Observable {
         couleur[0] = Color.TRANSPARENT;
         couleur[1] = Color.BLUE;
         couleur[2] = Color.RED;
+        couleur[3] = Color.GREEN;
+        couleur[4] = Color.DARKORCHID;
+        couleur[5] = Color.HOTPINK;
+        couleur[6] = Color.LIGHTSEAGREEN;
         
         backgroundCouleur = new Color[7];
         backgroundCouleur[0] = Color.TRANSPARENT;
         backgroundCouleur[1] = new Color(0, 0, 0.4, 1);
-        backgroundCouleur[2] = new Color(0.4, 0, 0, 1);
+        backgroundCouleur[2] = new Color(0.4, 0, 0, 0.5);
+        backgroundCouleur[3] = new Color(0, 0.4, 0, 0.5);
+        backgroundCouleur[4] = new Color(0, 0, 0.4, 1);
+        backgroundCouleur[5] = new Color(0, 0, 0.2, 1);
+        backgroundCouleur[6] = new Color(0.2, 0, 0, 1);
         
         canBeDragged = true;
     }

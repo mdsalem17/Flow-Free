@@ -74,7 +74,7 @@ public class VueControleur extends Application {
                         final int fId = m.jeu.grille.getCase(fRow, fColumn).getId();
                         final int pos = m.jeu.grille.getCase(fRow, fColumn).getPosition();
 
-                        Circle circle = new Circle(25, 25, 25);
+                        Circle circle = new Circle(20, 20, 20);
                         Polyline line = new Polyline();
                         Rectangle rect = new Rectangle(0, 0, 58, 58);
 
@@ -213,7 +213,7 @@ public class VueControleur extends Application {
                 final int fRow = row;
                 final int fId = m.jeu.grille.getCase(row,column).getId();
                 
-                Circle circle = new Circle(25, 25, 25);
+                Circle circle = new Circle(20, 20, 20);
                 circle.setFill(m.couleur[Math.abs(fId)]);
                 tabCircles[column][row] = circle;
                 Pane pane = new Pane();
