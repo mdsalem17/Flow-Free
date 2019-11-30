@@ -115,6 +115,10 @@ public class JeuLignes {
                     return false;
             }
         }
+        for(int k = 0; k < tabChemins.length; k++){
+            if(tabChemins[k].getCaseTrajet(0).getId() != tabChemins[k].getCaseTrajet(tabChemins[k].getTrajetSize()-1).getId())
+                return false;
+        }
         return true;
     }
     

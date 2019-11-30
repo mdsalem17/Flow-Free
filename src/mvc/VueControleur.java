@@ -55,7 +55,7 @@ public class VueControleur extends Application {
         Double[] verticalPoints = {100.0, 0.0, 100.0, 42.0};
         Double[] horizontalPoints = {0.0, 100.0, 42.0, 100.0};
 
-        stage.setTitle("Pro");
+        stage.setTitle("Projet LIFAP7");
 
         GridPane grid = new GridPane();
         grid.getStyleClass().add("game-grid");
