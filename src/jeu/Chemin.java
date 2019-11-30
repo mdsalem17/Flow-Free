@@ -49,7 +49,6 @@ public class Chemin {
     
     public void ajustTrajet(int indice){
         for(int i = indice; i <= trajet.size()-1; i++){
-            System.out.println(" =>>>>>>> case "+i+" removed from trajet, x et  => "+trajet.get(i).getX()+", "+trajet.get(i).getY());
             trajet.remove(i);
         }
     }
@@ -66,30 +65,63 @@ public class Chemin {
     
     public int getCheminShape(int indice){
         if(indice > 0 && indice < trajet.size()){
+            
             int x1 = trajet.get(indice-1).getX();
             int y1= trajet.get(indice-1).getY();
             
             int x2 = trajet.get(indice).getX();
             int y2 = trajet.get(indice).getY();
-            
-            //possible corer
+
             if(trajet.size() - indice > 1){
                 int x3 = trajet.get(indice+1).getX();
                 int y3 = trajet.get(indice+1).getY();
-                
-                //upper left corner
-                if((x1 == (x3-1) && y1 == (y3+1) || x1 == (x3+1) && y1 == (y3-1)) && (x1 == x2 || x2 == x3) && (y1 == y2 || y2 == y3))
-                    return 3;
-                //upper rigt corner
-                else if((x1 == (x3-1) && y1 == (y3-1) || x1 == (x3+1) && y1 == (y3+1)) && (x1 == x2 || x2 == x3) && (y1 == y2 || y2 == y3))
-                    return 4;
+
+                if (x3 == x1) {
+                    return 1;
+                }
+
+                else if (y3 == y1) {
+                    return 2;
+                }
+
+                else if (x3 > x1) {
+                    if (y3 < y1) {
+                        if (x3 == x2)
+                            return 6;
+                        else
+                            return 3;
+                    }
+                    else {
+                        if (x3 == x2)
+                            return 5;
+                        else
+                            return 4;
+                    }
+
+                }
+                else {
+                    if (y3 < y1) {
+                        if (x3 == x2)
+                            return 4;
+                        else
+                            return 5;
+                    }
+                    else {
+                        if (x3 == x2)
+                            return 3;
+                        else
+                            return 6;
+                    }
+                }
+            }else if(trajet.size() - indice == 1){            
+                if(x1 == x2 && y1 != y2)
+                    return 1;
+                else if(x1 != x2 && y1 == y2)
+                    return 2;
             }
             
-            if(x1 == x2 && y1 != y2)
-                return 1;
-            else if(x1 != x2 && y1 == y2)
-                return 2;
         }
+
         return 0;
     }
     

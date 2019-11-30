@@ -29,7 +29,7 @@ public class JeuLignes {
         }
     }
     
-    public void modifTrajet(Case caseCourant, boolean draggable){
+    public boolean modifTrajet(Case caseCourant, boolean draggable){
         if(draggable){
             
             for(int i = 0; i < tabChemins[caseCourant.getId()-1].trajet.size()-1; i++){
@@ -57,38 +57,40 @@ public class JeuLignes {
                         }
                     }
                 }
-                //right corners
+                //corners
                 else if(((tabChemins[caseCourant.getId()-1].trajet.get(i).getX() == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()+1) || (tabChemins[caseCourant.getId()-1].trajet.get(i).getX()+1 == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()))
                             && ((tabChemins[caseCourant.getId()-1].trajet.get(i).getY() == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()+1) || (tabChemins[caseCourant.getId()-1].trajet.get(i).getY()+1 == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()))){
-                    //bottom corner
-                    if(tabChemins[caseCourant.getId()-1].trajet.get(i).getY() > tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()
-                            && grille.getCase(tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX(), tabChemins[caseCourant.getId()-1].trajet.get(i).getY()).getId() == 0){
-                        tabChemins[caseCourant.getId()-1].ajouter(i+1, new Case(-(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getId())), tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX(), tabChemins[caseCourant.getId()-1].trajet.get(i).getY()));
-                    }
-                    //upper corner
-                    else if(grille.getCase(tabChemins[caseCourant.getId()-1].trajet.get(i).getX(), tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()).getId() == 0){
-                        tabChemins[caseCourant.getId()-1].ajouter(i+1, new Case(-(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getId())), tabChemins[caseCourant.getId()-1].trajet.get(i).getX(), tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()));
-                    }
-                    //ca't add corer
-                    else{
-                        tabChemins[caseCourant.getId()-1].ajustTrajet(i);
-                        appliquerChemin();
-                    }
-
+                    appliquerViderChemin(tabChemins[caseCourant.getId()-1]);
+                    appliquerChemin();
+                    return false;
                 }
                 //plusieurs cases manquantes
-                else if(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getX() - tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()) == 1 && Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getY() - tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()) > 1){
-                    tabChemins[caseCourant.getId()-1].ajouter(i+1, new Case(-(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getId())), tabChemins[caseCourant.getId()-1].trajet.get(i).getX()+1, tabChemins[caseCourant.getId()-1].trajet.get(i).getY()));
+                /*else if(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getX() - tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()) == 1 && Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getY() - tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()) > 1){
+                    return false;
                 }
                 else if(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getX() - tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()) > 1 && Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getY() - tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()) == 1){
-                    tabChemins[caseCourant.getId()-1].ajouter(i+1, new Case(-(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getId())), tabChemins[caseCourant.getId()-1].trajet.get(i).getX(), tabChemins[caseCourant.getId()-1].trajet.get(i).getY()+1));
-                }
+                    return false;
+                }*/
             }
         }
+        return true;
+    }
+    
+    public void appliquerViderChemin(Chemin chemin){
+        int x, y;
+        for(int i = 0 ; i < chemin.getTrajetSize(); i++){
+            x = chemin.getCaseTrajet(i).getX();
+            y = chemin.getCaseTrajet(i).getY();
+            if(grille.isChemin(x, y)){
+                grille.setCaseId(0, x, y);
+            }
+            grille.getCase(x, y).setCrossed(false);
+        }
+        chemin.viderChemin();
     }
     
     public void appliquerChemin(){
-        int _id;
+        int _id;        
         for(int k = 0; k < tabChemins.length; k++){
             for(int i = 0; i < tabChemins[k].getTrajetSize(); i++){
                 _id = grille.getCase(tabChemins[k].getCaseTrajet(i).getX(), tabChemins[k].getCaseTrajet(i).getY()).getId();
