@@ -5,7 +5,6 @@
  */
 package mvc;
 
-import java.awt.Button;
 import java.util.Observable;
 import java.util.Observer;
 import javafx.application.Application;
@@ -30,6 +29,11 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 /**
  *
@@ -268,6 +272,16 @@ public class VueControleur extends Application {
         hbBtn.getChildren().add(new Button("niveau Suivant"));
         grid.add(hbBtn, 1, 4);*/
         
+        Button button1 = new Button("Num 1");
+        Button button2 = new Button("Num 2");
+        Button button3 = new Button("Num 3");
+
+        grid.add(button1, 0, m.jeu.grille.getTaille());
+        grid.setHalignment(button3, HPos.CENTER);
+        grid.setValignment(button3, VPos.CENTER);
+        grid.add(button2, m.jeu.grille.getTaille()-2, m.jeu.grille.getTaille());
+        grid.add(button3, m.jeu.grille.getTaille()-1, m.jeu.grille.getTaille());
+       
         Scene scene = new Scene(grid, (m.jeu.grille.getTaille() * 60) + 100, (m.jeu.grille.getTaille() * 60) + 100, Color.BLACK);
         scene.getStylesheets().add("mvc/game.css");
         stage.setResizable(false);
