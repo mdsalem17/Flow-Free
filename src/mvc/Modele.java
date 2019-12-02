@@ -12,7 +12,7 @@ import jeu.JeuLignes;
 
 /**
  *
- * @author fred
+ * @author Khaled
  */
 public class Modele extends Observable {
     
@@ -24,8 +24,8 @@ public class Modele extends Observable {
     CaseSymbol caseDebutCourant;
     boolean canBeDragged;
     
-    public Modele(){
-        jeu = new JeuLignes();
+    public Modele(int selectedLevel){
+        jeu = new JeuLignes(selectedLevel);
         
         couleur = new Color[7];
         couleur[0] = Color.TRANSPARENT;

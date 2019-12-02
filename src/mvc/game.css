@@ -25,3 +25,30 @@ and open the template in the editor.
 .game-grid-cell.first-row.first-column {
     -fx-background-insets: 0, 1 ;
 }
+
+.button{
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+    -fx-font-family:"Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 1em; /* 12 */
+    -fx-text-fill: #ffffff;
+    -fx-text-fill: white;
+    -fx-border-style: solid, segments(1, 2);
+    -fx-border-color: #ffffff;
+}
+
+.button:focused {
+    -fx-border-width: 1, 1;
+    -fx-border-style: solid, segments(1, 2);
+    -fx-border-color: #ffffff;
+    -fx-text-fill: white;
+    -fx-border-radius: 0, 0;
+    -fx-border-insets: 1 1 1 1, 0;
+}
+
+.button:pressed {
+    -fx-background-color: white;
+    -fx-border-style: solid, segments(1, 2);
+    -fx-text-fill: black;
+    -fx-border-color: #ffffff;
+}

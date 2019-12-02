@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -9,16 +10,23 @@ import java.util.Observable;
 import java.util.Observer;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.event.ActionEvent;
+
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -28,27 +36,104 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
+
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 /**
  *
  * @author Khaled
  */
 public class VueControleur extends Application {
-    
+
     Modele m;
+    GridPane grid;
     int grilleSize;
+    int currentLevel;
+    BorderPane border;
+    
+    public HBox addHBoxTop() {
+        HBox hbox = new HBox();
+        hbox.setPadding(new Insets(30, 12, 0, 12));
+        hbox.setSpacing(10);
+        hbox.setAlignment(Pos.CENTER);
+        hbox.setStyle("-fx-background-color: #000000;");
+
+        Text levelText = new Text("Niveau "+currentLevel);
+        levelText.setFont(Font.font("Verdana", 20));
+        levelText.setTextAlignment(TextAlignment.CENTER);
+        levelText.setFill(Color.WHITE);
+
+        hbox.getChildren().addAll(levelText);
+
+        return hbox;
+    }
+    
+    public HBox addHBoxBottom() {
+        HBox hbox = new HBox();
+        hbox.setPadding(new Insets(15, 12, 15, 12));
+        hbox.setSpacing(10);
+        hbox.setStyle("-fx-background-color: #000000;");
+
+        Button btnNiveauPrec = new Button("🡸");
+        btnNiveauPrec.setTooltip(new Tooltip("Niveau précédent"));
+        btnNiveauPrec.setPrefSize(100, 20);
+        btnNiveauPrec.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(currentLevel > 1){
+                    currentLevel--;
+                    System.err.println("currentLevel "+currentLevel);
+                    m = new Modele(currentLevel);
+                }
+            }
+        });
+        
+        Button btnReinitialiser = new Button("🔄");
+        btnReinitialiser.setTooltip(new Tooltip("Réinitialiser"));
+        btnReinitialiser.setPrefSize(100, 20);
+        btnReinitialiser.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Hello World!");
+            }
+        });
+        
+        Button btnNiveauSuiv = new Button("🡺");
+        btnNiveauSuiv.setTooltip(new Tooltip("Niveau suivant"));
+        btnNiveauSuiv.setPrefSize(100, 20);
+        btnNiveauSuiv.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(currentLevel < 4){
+                    currentLevel++;
+                    System.err.println("currentLevel "+currentLevel);
+                    m = new Modele(currentLevel);
+                }   
+            }
+        });
+        
+        hbox.getChildren().addAll(btnNiveauPrec, btnReinitialiser, btnNiveauSuiv);
+
+        return hbox;
+    }
     
     @Override
     public void start(Stage stage) {
 
+        currentLevel = 1;
+        
         // initialisation du modèle que l'on souhaite utiliser
-        m = new Modele();
+        m = new Modele(currentLevel);
+
+        // gestion du placement (permet de palcer le champ Text affichage en haut, et GridPane grid au centre)
+        border = new BorderPane();
+        
+        grid = new GridPane();
+
         grilleSize = m.jeu.grille.getTaille();
         
         // permet de placer les diffrents boutons dans une grille
@@ -59,11 +144,14 @@ public class VueControleur extends Application {
         Double[] verticalPoints = {100.0, 0.0, 100.0, 42.0};
         Double[] horizontalPoints = {0.0, 100.0, 42.0, 100.0};
 
-        stage.setTitle("Projet LIFAP7");
-
-        GridPane grid = new GridPane();
         grid.getStyleClass().add("game-grid");
         grid.setAlignment(Pos.CENTER);
+
+        
+        HBox hboxTop = addHBoxTop();
+        HBox hboxBottom = addHBoxBottom();
+        border.setTop(hboxTop);
+        border.setBottom(hboxBottom);
 
         m.addObserver(new Observer() {
 
@@ -209,7 +297,7 @@ public class VueControleur extends Application {
             RowConstraints row = new RowConstraints(60);
             grid.getRowConstraints().add(row);
         }
-
+        
         for (int column = 0; column < m.jeu.grille.getTaille(); column++) {
             for (int row = 0; row < m.jeu.grille.getTaille(); row++) {
                 
@@ -266,33 +354,22 @@ public class VueControleur extends Application {
                 grid.add(tabCircles[column][row], column, row);
             }
         }
-
-        /*HBox hbBtn = new HBox(10);
-        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn.getChildren().add(new Button("niveau Suivant"));
-        grid.add(hbBtn, 1, 4);*/
         
-        Button button1 = new Button("Num 1");
-        Button button2 = new Button("Num 2");
-        Button button3 = new Button("Num 3");
+        border.setCenter(grid);
 
-        grid.add(button1, 0, m.jeu.grille.getTaille());
-        grid.setHalignment(button3, HPos.CENTER);
-        grid.setValignment(button3, VPos.CENTER);
-        grid.add(button2, m.jeu.grille.getTaille()-2, m.jeu.grille.getTaille());
-        grid.add(button3, m.jeu.grille.getTaille()-1, m.jeu.grille.getTaille());
-       
-        Scene scene = new Scene(grid, (m.jeu.grille.getTaille() * 60) + 100, (m.jeu.grille.getTaille() * 60) + 100, Color.BLACK);
+        Scene scene = new Scene(border, (m.jeu.grille.getTaille() * 60) + 100, (m.jeu.grille.getTaille() * 60) + 140, Color.BLACK);
+        stage.setTitle("Projet LIFAP7");
         scene.getStylesheets().add("mvc/game.css");
         stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         launch(args);
-    }    
+    }
+
 }

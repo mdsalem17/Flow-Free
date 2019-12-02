@@ -16,9 +16,9 @@ public class JeuLignes {
     public Grille grille;
     public Chemin tabChemins[];
     
-    public JeuLignes(){
+    public JeuLignes(int level){
         grille = new Grille();
-        grille.init();
+        grille.init(level);
         System.out.println(grille.toString());
         System.out.println(grille.getNbCaseSymbol());
         tabChemins = new Chemin[grille.getNbCaseSymbol()];
@@ -102,8 +102,6 @@ public class JeuLignes {
                 grille.setCaseId(tabChemins[k].getCaseTrajet(i).getId(), tabChemins[k].getCaseTrajet(i).getX(), tabChemins[k].getCaseTrajet(i).getY());
                 grille.getCase(tabChemins[k].getCaseTrajet(i).getX(), tabChemins[k].getCaseTrajet(i).getY())
                         .setPosition(tabChemins[k].getCheminShape(i));
-
-                         
             }
         }
     }

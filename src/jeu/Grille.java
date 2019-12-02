@@ -61,22 +61,8 @@ public class Grille {
         plateau[x][y].setId(_id);
     }
     
-    public void init(){
-        /*
-        initCaseSymbol();
-        
-        for(int i = 0; i < n; i++){
-            for(int j = 0 ; j < n; j++){
-                if(!(plateau[i][j] instanceof CaseSymbol))
-                    plateau[i][j] = new CaseChemin(0, i ,j) {};
-                else
-                    nbCaseSymbol++;
-            }
-        }
-        nbCaseSymbol = nbCaseSymbol/2;
-        */
-        
-        int[][] grid = readGridFromFile(n,2);
+    public void init(int level){      
+        int[][] grid = readGridFromFile(n,level);
         for(int i=0; i<grid.length; i++){
             for(int j=0; j<grid.length; j++){
                 if(grid[i][j]==0) {
