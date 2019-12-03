@@ -18,6 +18,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.ClipboardContent;
@@ -38,7 +39,6 @@ import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Rectangle;
 
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -54,72 +54,6 @@ public class VueControleur extends Application {
     int grilleSize;
     int currentLevel;
     BorderPane border;
-    
-    public HBox addHBoxTop() {
-        HBox hbox = new HBox();
-        hbox.setPadding(new Insets(30, 12, 0, 12));
-        hbox.setSpacing(10);
-        hbox.setAlignment(Pos.CENTER);
-        hbox.setStyle("-fx-background-color: #000000;");
-
-        Text levelText = new Text("Niveau "+currentLevel);
-        levelText.setFont(Font.font("Verdana", 20));
-        levelText.setTextAlignment(TextAlignment.CENTER);
-        levelText.setFill(Color.WHITE);
-
-        hbox.getChildren().addAll(levelText);
-
-        return hbox;
-    }
-    
-    public HBox addHBoxBottom() {
-        HBox hbox = new HBox();
-        hbox.setPadding(new Insets(15, 12, 15, 12));
-        hbox.setSpacing(10);
-        hbox.setStyle("-fx-background-color: #000000;");
-
-        Button btnNiveauPrec = new Button("🡸");
-        btnNiveauPrec.setTooltip(new Tooltip("Niveau précédent"));
-        btnNiveauPrec.setPrefSize(100, 20);
-        btnNiveauPrec.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(currentLevel > 1){
-                    currentLevel--;
-                    System.err.println("currentLevel "+currentLevel);
-                    m = new Modele(currentLevel);
-                }
-            }
-        });
-        
-        Button btnReinitialiser = new Button("🔄");
-        btnReinitialiser.setTooltip(new Tooltip("Réinitialiser"));
-        btnReinitialiser.setPrefSize(100, 20);
-        btnReinitialiser.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
-            }
-        });
-        
-        Button btnNiveauSuiv = new Button("🡺");
-        btnNiveauSuiv.setTooltip(new Tooltip("Niveau suivant"));
-        btnNiveauSuiv.setPrefSize(100, 20);
-        btnNiveauSuiv.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(currentLevel < 4){
-                    currentLevel++;
-                    System.err.println("currentLevel "+currentLevel);
-                    m = new Modele(currentLevel);
-                }   
-            }
-        });
-        
-        hbox.getChildren().addAll(btnNiveauPrec, btnReinitialiser, btnNiveauSuiv);
-
-        return hbox;
-    }
     
     @Override
     public void start(Stage stage) {
@@ -142,14 +76,67 @@ public class VueControleur extends Application {
         Rectangle[][] tabRects = new Rectangle[grilleSize][grilleSize];
         Double[] cornerPoints = {0.0, 0.0, 22.0, 0.0, 22.0, 22.0};
         Double[] verticalPoints = {100.0, 0.0, 100.0, 42.0};
-        Double[] horizontalPoints = {0.0, 100.0, 42.0, 100.0};
+        Double[] horizontalPoints = {0.0, 100.0, 45.0, 100.0};
 
         grid.getStyleClass().add("game-grid");
         grid.setAlignment(Pos.CENTER);
 
+        HBox hboxTop = new HBox();
+        hboxTop.setPadding(new Insets(30, 12, 0, 12));
+        hboxTop.setSpacing(10);
+        hboxTop.setAlignment(Pos.CENTER);
+        hboxTop.setStyle("-fx-background-color: #000000;");
+
+        Text levelText = new Text("Niveau "+currentLevel);
+        levelText.setFont(Font.font("Verdana", 20));
+        levelText.setTextAlignment(TextAlignment.CENTER);
+        levelText.setFill(Color.WHITE);
+
+        hboxTop.getChildren().addAll(levelText);
         
-        HBox hboxTop = addHBoxTop();
-        HBox hboxBottom = addHBoxBottom();
+        HBox hboxBottom = new HBox();
+        hboxBottom.setPadding(new Insets(15, 12, 15, 12));
+        hboxBottom.setSpacing(10);
+        hboxBottom.setStyle("-fx-background-color: #000000;");
+
+        Button btnNiveauPrec = new Button("🡸");
+        btnNiveauPrec.setTooltip(new Tooltip("Niveau précédent"));
+        btnNiveauPrec.setPrefSize(100, 20);
+        btnNiveauPrec.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(currentLevel > 1){
+                    currentLevel--;
+                    m.modifierNiveau(currentLevel);
+                }
+            }
+        });
+        
+        Button btnReinitialiser = new Button("🔄");
+        btnReinitialiser.setTooltip(new Tooltip("Réinitialiser"));
+        btnReinitialiser.setPrefSize(100, 20);
+        btnReinitialiser.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                m.reinitGrille();
+            }
+        });
+        
+        Button btnNiveauSuiv = new Button("🡺");
+        btnNiveauSuiv.setTooltip(new Tooltip("Niveau suivant"));
+        btnNiveauSuiv.setPrefSize(100, 20);
+        btnNiveauSuiv.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(currentLevel < 4){
+                    currentLevel++;
+                    m.modifierNiveau(currentLevel);
+                }   
+            }
+        });
+        
+        hboxBottom.getChildren().addAll(btnNiveauPrec, btnReinitialiser, btnNiveauSuiv);
+        
         border.setTop(hboxTop);
         border.setBottom(hboxBottom);
 
@@ -157,6 +144,8 @@ public class VueControleur extends Application {
 
             @Override
             public void update(Observable o, Object arg) {
+                
+                levelText.setText("Niveau "+currentLevel);
                 
                 for (int column = 0; column < grilleSize; column++) {
                     for (int row = 0; row < grilleSize; row++) {
@@ -187,6 +176,8 @@ public class VueControleur extends Application {
                                 line.getPoints().addAll(verticalPoints);
                             }*/
                             line.getPoints().addAll(horizontalPoints);
+                            GridPane.setHalignment(line, HPos.CENTER);
+                            GridPane.setValignment(line, VPos.CENTER);
                             line.setStroke(m.couleur[Math.abs(fId)]);
                         }
                         if(m.jeu.grille.getCase(row,column).getCrossed())
@@ -281,6 +272,13 @@ public class VueControleur extends Application {
 
                                 // attention, le setOnDragDone est déclenché par la source du Drag&Drop
                                 m.stopDD(fColumn, fRow);
+                                if(m.jeu.partieTerminee()){
+                                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                    alert.setTitle("Partie gagner!");
+                                    alert.setContentText("I have a great message for you!");
+
+                                    alert.showAndWait();
+                                }
                             }
                         });
                     }

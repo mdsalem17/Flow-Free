@@ -35,44 +35,64 @@ public class JeuLignes {
         if(draggable){
             
             for(int i = 0; i < tabChemins[caseCourant.getId()-1].trajet.size()-1; i++){
-                if(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getId()) != Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i+1).getId())){
-                    tabChemins[caseCourant.getId()-1].ajustTrajet(i+1);
+                
+                int x1 = tabChemins[caseCourant.getId()-1].trajet.get(i).getX();
+                int y1 = tabChemins[caseCourant.getId()-1].trajet.get(i).getY();
+                
+                if(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getId()) !=
+                        Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i+1).getId())){
+                    tabChemins[caseCourant.getId()-1].ajustTrajet(i);
+                    appliquerViderChemin(tabChemins[caseCourant.getId()-1]);
+                    return false;
+                    
                 }
                 //horizontal case missing
-                else if(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getX()-tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()) > 1 && (tabChemins[caseCourant.getId()-1].trajet.get(i).getY() == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY())){
-                    for(int k = 0 ; k < Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getX()-tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()); k++){
-                        if(tabChemins[caseCourant.getId()-1].trajet.get(i+k).getX() < tabChemins[caseCourant.getId()-1].trajet.get(i+k+1).getX()){
-                            tabChemins[caseCourant.getId()-1].ajouter(i+k+1, new Case(-(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i+k).getId())), tabChemins[caseCourant.getId()-1].trajet.get(i+k).getX()+1, tabChemins[caseCourant.getId()-1].trajet.get(i+k).getY()));
+                else if(Math.abs(x1-tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()) > 1 &&
+                        (y1 == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY())){
+                    for(int k = 0 ; k < Math.abs(x1-tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()); k++){
+                        
+                        int x_k = tabChemins[caseCourant.getId()-1].trajet.get(i+k).getX();
+                        int y_k = tabChemins[caseCourant.getId()-1].trajet.get(i+k).getY();
+                        int id_k = tabChemins[caseCourant.getId()-1].trajet.get(i+k).getId();
+                        
+                        if(x_k < tabChemins[caseCourant.getId()-1].trajet.get(i+k+1).getX()){
+                            tabChemins[caseCourant.getId()-1].ajouter(i+k+1, new Case(-(Math.abs(id_k)), x_k+1, y_k));
                         }else{
-                            tabChemins[caseCourant.getId()-1].ajouter(i+k+1, new Case(-(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i+k).getId())), tabChemins[caseCourant.getId()-1].trajet.get(i+k).getX()-1, tabChemins[caseCourant.getId()-1].trajet.get(i+k).getY()));
+                            tabChemins  [caseCourant.getId()-1].ajouter(i+k+1, new Case(-(Math.abs(id_k)), x_k-1, y_k));
                         }
                     }
                 }
                 //vertical case missing
-                else if((tabChemins[caseCourant.getId()-1].trajet.get(i).getX() == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()) && Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getY()-tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()) > 1){
-                    for(int k = 0 ; k < Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getY()-tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()); k++){
+                else if((x1 == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()) && Math.abs(y1-tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()) > 1){
+                    for(int k = 0 ; k < Math.abs(y1-tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()); k++){
 
-                        if(tabChemins[caseCourant.getId()-1].trajet.get(i+k).getY()< tabChemins[caseCourant.getId()-1].trajet.get(i+k+1).getY()){
-                            tabChemins[caseCourant.getId()-1].ajouter(i+k+1, new Case(-(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i+k).getId())), tabChemins[caseCourant.getId()-1].trajet.get(i+k).getX(), tabChemins[caseCourant.getId()-1].trajet.get(i+k).getY()+1));
+                        int x_k = tabChemins[caseCourant.getId()-1].trajet.get(i+k).getX();
+                        int y_k = tabChemins[caseCourant.getId()-1].trajet.get(i+k).getY();
+                        int id_k = tabChemins[caseCourant.getId()-1].trajet.get(i+k).getId();
+                        
+                        if(y_k< tabChemins[caseCourant.getId()-1].trajet.get(i+k+1).getY()){
+                            tabChemins[caseCourant.getId()-1].ajouter(i+k+1, new Case(-(Math.abs(id_k)), x_k, y_k+1));
                         }else{
-                            tabChemins[caseCourant.getId()-1].ajouter(i+k+1, new Case(-(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i+k).getId())), tabChemins[caseCourant.getId()-1].trajet.get(i+k).getX(), tabChemins[caseCourant.getId()-1].trajet.get(i+k).getY()-1));
+                            tabChemins[caseCourant.getId()-1].ajouter(i+k+1, new Case(-(Math.abs(id_k)), x_k, y_k-1));
                         }
                     }
                 }
                 //corners
-                else if(((tabChemins[caseCourant.getId()-1].trajet.get(i).getX() == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()+1) || (tabChemins[caseCourant.getId()-1].trajet.get(i).getX()+1 == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()))
-                            && ((tabChemins[caseCourant.getId()-1].trajet.get(i).getY() == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()+1) || (tabChemins[caseCourant.getId()-1].trajet.get(i).getY()+1 == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()))){
+                else if(((x1 == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()+1) ||
+                        (x1+1 == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX())) &&
+                        ((y1 == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()+1) ||
+                        (y1+1 == tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()))){
                     appliquerViderChemin(tabChemins[caseCourant.getId()-1]);
+                    tabChemins[caseCourant.getId()-1].viderChemin();
                     appliquerChemin();
                     return false;
                 }
-                //plusieurs cases manquantes
-                /*else if(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getX() - tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()) == 1 && Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getY() - tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()) > 1){
+                else if(Math.abs(x1 - tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()) > 1 ||
+                        Math.abs(y1 - tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()) > 1){
+                    appliquerViderChemin(tabChemins[caseCourant.getId()-1]);
+                    tabChemins[caseCourant.getId()-1].ajustTrajet(i);
                     return false;
                 }
-                else if(Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getX() - tabChemins[caseCourant.getId()-1].trajet.get(i+1).getX()) > 1 && Math.abs(tabChemins[caseCourant.getId()-1].trajet.get(i).getY() - tabChemins[caseCourant.getId()-1].trajet.get(i+1).getY()) == 1){
-                    return false;
-                }*/
             }
         }
         return true;
@@ -88,7 +108,6 @@ public class JeuLignes {
             }
             grille.getCase(x, y).setCrossed(false);
         }
-        chemin.viderChemin();
     }
     
     public void appliquerChemin(){

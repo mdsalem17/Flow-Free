@@ -51,6 +51,9 @@ public class Chemin {
         for(int i = indice; i <= trajet.size()-1; i++){
             trajet.remove(i);
         }
+        if(trajet.size() == 1 || trajet.get(0).getId() > 0){
+            viderChemin();
+        }
     }
     
     public void viderChemin(){
@@ -60,7 +63,7 @@ public class Chemin {
     public Case getCaseTrajet(int i){
         if(i < trajet.size()){
             return trajet.get(i);
-        }else throw new IndexOutOfBoundsException("Error: IndexOutOfBoundsException");
+        }else throw new IndexOutOfBoundsException("Error: IndexOutOfBoundsException "+trajet.get(i).getX()+", "+trajet.get(i).getY());
     }
     
     public int getCheminShape(int indice){
@@ -120,6 +123,17 @@ public class Chemin {
                     return 2;
             }
             
+        }else if(indice == 0 && trajet.size() > 1){
+            int x1 = trajet.get(indice).getX();
+            int y1= trajet.get(indice).getY();
+            
+            int x2 = trajet.get(indice+1).getX();
+            int y2 = trajet.get(indice+1).getY();
+            
+            if(x1 == x2 && y1 != y2)
+                    return 1;
+                else if(x1 != x2 && y1 == y2)
+                    return 2;
         }
 
         return 0;
