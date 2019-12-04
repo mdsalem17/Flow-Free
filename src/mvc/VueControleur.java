@@ -176,7 +176,7 @@ public class VueControleur extends Application {
         });
         
         Button btnReinitialiser = new Button("🔄");
-        btnReinitialiser.setTooltip(new Tooltip("Réinitialiser"));
+        btnReinitialiser.setTooltip(new Tooltip("Réinitialiser niveau"));
         btnReinitialiser.setPrefSize(100, 20);
         btnReinitialiser.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -346,28 +346,30 @@ public class VueControleur extends Application {
                                 if(m.jeu.partieTerminee()){
 
                                     ButtonType btnAlertReinitialiser = new ButtonType("Réinitialiser", ButtonBar.ButtonData.OK_DONE);
-                                    
                                     ButtonType btnAlertNiveauSuiv = new ButtonType("Niveau suivant", ButtonBar.ButtonData.CANCEL_CLOSE);
+                                    ButtonType btnAlertMenu = new ButtonType("Revenir au menu", ButtonBar.ButtonData.CANCEL_CLOSE);
                                     Alert alert;
 
                                     if(currentLevel >= 4){
-                                        alert = new Alert(AlertType.INFORMATION, " ",
-                                            btnAlertReinitialiser);
+                                        alert = new Alert(AlertType.INFORMATION, "Bravo vous avez terminé la partie 🎉🎊\nVeuillez cliquer sur « Revenir au menu » pour continuer",
+                                            btnAlertReinitialiser, btnAlertMenu);
                                     }else{
-                                        alert = new Alert(AlertType.INFORMATION, " ",
+                                        alert = new Alert(AlertType.INFORMATION, "Bravo vous avez terminé la partie 🎉🎊\nVeuillez cliquer sur « Niveau suivant » pour continuer",
                                             btnAlertReinitialiser, btnAlertNiveauSuiv);
-                                    }     
-                                            
+                                    }
                                     alert.setTitle("Partie gagnée!");
                                     alert.setHeaderText(null);
                                     Optional<ButtonType> result = alert.showAndWait();                                        
                                     
-                                    if (result.orElse(btnAlertNiveauSuiv) == btnAlertReinitialiser) {
+                                    if(result.get() == btnAlertReinitialiser) {
                                         m.reinitGrille();
-                                    }else{
+                                    }else if(result.get() == btnAlertNiveauSuiv){
                                         currentLevel++;
                                         btnNiveauPrec.setDisable(false);
+                                        btnNiveauSuiv.setDisable((currentLevel == 4)); 
                                         m.modifierNiveau(currentGroup, currentLevel);
+                                    }else if(result.get() == btnAlertMenu){
+                                        stage.setScene(scene2);
                                     }
                                 }
                             }
@@ -453,6 +455,8 @@ public class VueControleur extends Application {
         
         //Scene 1
         Button group3 = new Button("Grille 3 x 3");
+        group3.setStyle("-fx-font-size:23");
+        group3.setPrefSize(150, 30);
         group3.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -465,6 +469,8 @@ public class VueControleur extends Application {
         });
         
         Button group4= new Button("Grille 4 x 4");
+        group4.setStyle("-fx-font-size:23");
+        group4.setPrefSize(150, 30);
         group4.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -476,6 +482,8 @@ public class VueControleur extends Application {
             }
         });
         Button group5 = new Button("Grille 5 x 5");
+        group5.setStyle("-fx-font-size:23");
+        group5.setPrefSize(150, 30);
         group5.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -488,7 +496,7 @@ public class VueControleur extends Application {
         });
         
         HBox hBoxTopPane2 = new HBox();
-        hBoxTopPane2.setPadding(new Insets(30, 12, 0, 12));
+        hBoxTopPane2.setPadding(new Insets(40, 12, 0, 12));
         hBoxTopPane2.setSpacing(10);
         hBoxTopPane2.setAlignment(Pos.CENTER);
         hBoxTopPane2.setStyle("-fx-background-color: #000000;");
@@ -508,7 +516,7 @@ public class VueControleur extends Application {
         vBoxCenterPane2.getChildren().addAll(group3, group4, group5);
         
         VBox vBoxBottomPane2 = new VBox();
-        vBoxBottomPane2.setPadding(new Insets(30, 12, 0, 12));
+        vBoxBottomPane2.setPadding(new Insets(0, 12, 20, 12));
         vBoxBottomPane2.setSpacing(10);
         vBoxBottomPane2.setAlignment(Pos.CENTER);
         vBoxBottomPane2.setStyle("-fx-background-color: #000000;");
