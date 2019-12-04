@@ -7,7 +7,6 @@ package mvc;
 
 import cases.CaseSymbol;
 import java.util.Observable;
-import javafx.scene.paint.Color;
 import jeu.JeuLignes;
 
 /**
@@ -20,31 +19,12 @@ public class Modele extends Observable {
     public int currentC, currentR;
     public int lastC, lastR;
     JeuLignes jeu;
-    Color couleur[], backgroundCouleur[];
     CaseSymbol caseDebutCourant;
     boolean canBeDragged;
     int caseDebutPassed;
     
-    public Modele(int selectedLevel){
-        jeu = new JeuLignes(selectedLevel);
-        
-        couleur = new Color[7];
-        couleur[0] = Color.TRANSPARENT;
-        couleur[1] = Color.BLUE;
-        couleur[2] = Color.RED;
-        couleur[3] = Color.LIGHTSEAGREEN;
-        couleur[4] = Color.DARKORCHID;
-        couleur[5] = Color.HOTPINK;
-        couleur[6] = Color.LIGHTSEAGREEN;
-        
-        backgroundCouleur = new Color[7];
-        backgroundCouleur[0] = Color.TRANSPARENT;
-        backgroundCouleur[1] = new Color(0, 0, 0.4, 1);
-        backgroundCouleur[2] = new Color(0.4, 0, 0, 0.5);
-        backgroundCouleur[3] = new Color(0, 0.4, 0, 0.5);
-        backgroundCouleur[4] = new Color(0, 0, 0.4, 1);
-        backgroundCouleur[5] = new Color(0, 0, 0.2, 1);
-        backgroundCouleur[6] = new Color(0.2, 0, 0, 1);
+    public Modele(int selectedGroup, int selectedLevel){
+        jeu = new JeuLignes(selectedGroup, selectedLevel);
         
         canBeDragged = true;
         caseDebutPassed = 0;
@@ -60,6 +40,7 @@ public class Modele extends Observable {
         setChanged();
         caseDebutCourant = new CaseSymbol(jeu.grille.getCase(r, c).getId(), r, c);
         caseDebutPassed = 1;
+        System.err.println("caseDebutPassed => "+caseDebutPassed);
         jeu.appliquerViderChemin(jeu.tabChemins[caseDebutCourant.getId()-1]);
         jeu.tabChemins[caseDebutCourant.getId()-1].viderChemin();
         notifyObservers();
@@ -82,19 +63,20 @@ public class Modele extends Observable {
         }
         if(currentR != r || currentC != c && canBeDragged){
             jeu.tabChemins[caseDebutCourant.getId()-1].ajouter(jeu.tabChemins[caseDebutCourant.getId()-1].getTrajetSize(), jeu.grille.getCase(currentR, currentC));
+            System.err.println("after ajouter "+currentR+", "+currentC);
             jeu.tabChemins[caseDebutCourant.getId()-1].removeDuplicate();
             canBeDragged = jeu.modifTrajet(caseDebutCourant, canBeDragged);
             jeu.appliquerChemin();
             
-            /*if(jeu.grille.getCase(currentR, currentC).getId() == caseDebutCourant.getId() && jeu.grille.getCase(currentR, currentC).getId() > 0){
-                System.err.println("if test: jeu.grille.getCase(currentR, currentC).getId() = "+jeu.grille.getCase(currentR, currentC).getId()+" caseDebutCourant.getId() = "+caseDebutCourant.getId());
-                caseDebutPassed++;
-                System.err.println("caseDebutPassed => "+caseDebutPassed);
-            }*/
-            
             currentR = r;
             currentC = c;
             
+            /*if(jeu.grille.getCase(currentR, currentC).getId() == caseDebutCourant.getId() && jeu.grille.isSymbol(currentR, currentC)){
+                System.err.println("if test: jeu.grille.getCase(currentR, currentC).getId() = "+jeu.grille.getCase(currentR, currentC).getId()+" jeu.grille.isSymbol(currentR, currentC) = "+jeu.grille.isSymbol(currentR, currentC));
+                System.err.println("if test: currentR = "+currentR+" currentC = "+currentC);
+                caseDebutPassed++;
+                System.err.println("caseDebutPassed => "+caseDebutPassed);
+            }*/
         }
         setChanged();
         notifyObservers();
@@ -136,8 +118,8 @@ public class Modele extends Observable {
         notifyObservers();
     }
     
-    public void modifierNiveau(int level){
-        jeu = new JeuLignes(level);
+    public void modifierNiveau(int group, int level){
+        jeu = new JeuLignes(group, level);
         setChanged();
         notifyObservers();
     }

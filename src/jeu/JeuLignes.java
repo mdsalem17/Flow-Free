@@ -16,8 +16,9 @@ public class JeuLignes {
     public Grille grille;
     public Chemin tabChemins[];
     
-    public JeuLignes(int level){
-        grille = new Grille();
+    public JeuLignes(int group, int level){
+        System.err.println("costrctor JeuLignes group "+group);
+        grille = new Grille(group);
         grille.init(level);
         System.out.println(grille.toString());
         System.out.println(grille.getNbCaseSymbol());
@@ -111,7 +112,7 @@ public class JeuLignes {
     }
     
     public void appliquerChemin(){
-        int _id;        
+        int _id;       
         for(int k = 0; k < tabChemins.length; k++){
             for(int i = 0; i < tabChemins[k].getTrajetSize(); i++){
                 _id = grille.getCase(tabChemins[k].getCaseTrajet(i).getX(), tabChemins[k].getCaseTrajet(i).getY()).getId();
@@ -137,19 +138,6 @@ public class JeuLignes {
                 return false;
         }
         return true;
-    }
-    
-    public String selectLevel(int size){
-        switch (size) {
-            case 3:
-                return "level_3x3";
-            case 4:
-                return "level_4x4";
-            case 5:
-                return "level_5x5";
-            default:
-                return "no such level";
-        }
     }
     
 }

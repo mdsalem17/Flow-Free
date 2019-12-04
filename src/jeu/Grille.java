@@ -26,8 +26,9 @@ public class Grille {
     private int n;
     private int nbCaseSymbol;
     
-    public Grille(){
-        n = 4;
+    public Grille(int _n){
+        System.err.println("costrctor Grille _n "+_n);
+        n = _n;
         nbCaseSymbol = 0;
         plateau = new Case[n][n];
     }
@@ -62,7 +63,7 @@ public class Grille {
     }
     
     public void init(int level){      
-        int[][] grid = readGridFromFile(n,level);
+        int[][] grid = readGridFromFile(n, level);
         for(int i=0; i<grid.length; i++){
             for(int j=0; j<grid.length; j++){
                 if(grid[i][j]==0) {
@@ -75,14 +76,6 @@ public class Grille {
         }
         nbCaseSymbol = nbCaseSymbol/2;
         System.out.println(Arrays.deepToString(grid));
-    }
-    
-    private void initCaseSymbol(){
-        plateau[0][0] = new CaseSymbol(1, 0, 0) {};
-        plateau[2][1] = new CaseSymbol(1, 2, 1) {};
-        
-        plateau[0][2] = new CaseSymbol(2, 0, 2) {};
-        plateau[n-1][n-1] = new CaseSymbol(2, n-1, n-1) {};
     }
     
     public static int[][] readGridFromFile(int gridSize, int gridNumber){

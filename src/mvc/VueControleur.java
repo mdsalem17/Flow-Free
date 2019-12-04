@@ -8,6 +8,7 @@ package mvc;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Optional;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
@@ -19,7 +20,10 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
@@ -33,6 +37,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polyline;
@@ -50,49 +55,101 @@ import javafx.scene.text.TextAlignment;
 public class VueControleur extends Application {
 
     Modele m;
+    Scene scene, scene2;
     GridPane grid;
-    int grilleSize;
-    int currentLevel;
+    int currentLevel, currentGroup;
     BorderPane border;
+    Color couleur[], backgroundCouleur[];
     
-    @Override
-    public void start(Stage stage) {
-
-        currentLevel = 1;
+    public BorderPane Jeu(int group, int level, Stage stage){
+        
+        couleur = new Color[7];
+        couleur[0] = Color.TRANSPARENT;
+        couleur[1] = Color.BLUE;
+        couleur[2] = Color.RED;
+        couleur[3] = Color.LIGHTSEAGREEN;
+        couleur[4] = Color.DARKORCHID;
+        couleur[5] = Color.HOTPINK;
+        couleur[6] = Color.LIGHTSEAGREEN;
+        
+        backgroundCouleur = new Color[7];
+        backgroundCouleur[0] = Color.TRANSPARENT;
+        backgroundCouleur[1] = new Color(0, 0, 0.4, 1);
+        backgroundCouleur[2] = new Color(0.4, 0, 0, 0.5);
+        backgroundCouleur[3] = new Color(0, 0.4, 0, 0.5);
+        backgroundCouleur[4] = new Color(0, 0, 0.4, 1);
+        backgroundCouleur[5] = new Color(0, 0, 0.2, 1);
+        backgroundCouleur[6] = new Color(0.2, 0, 0, 1);
         
         // initialisation du modèle que l'on souhaite utiliser
-        m = new Modele(currentLevel);
+        m = new Modele(group, level);
 
         // gestion du placement (permet de palcer le champ Text affichage en haut, et GridPane grid au centre)
         border = new BorderPane();
         
         grid = new GridPane();
-
-        grilleSize = m.jeu.grille.getTaille();
         
         // permet de placer les diffrents boutons dans une grille
-        Circle[][] tabCircles = new Circle[grilleSize][grilleSize];
-        Polyline[][] tabLines = new Polyline[grilleSize][grilleSize];
-        Rectangle[][] tabRects = new Rectangle[grilleSize][grilleSize];
+        Circle[][] tabCircles = new Circle[m.jeu.grille.getTaille()][m.jeu.grille.getTaille()];
+        Polyline[][] tabLines = new Polyline[m.jeu.grille.getTaille()][m.jeu.grille.getTaille()];
+        Rectangle[][] tabRects = new Rectangle[m.jeu.grille.getTaille()][m.jeu.grille.getTaille()];
         Double[] cornerPoints = {0.0, 0.0, 22.0, 0.0, 22.0, 22.0};
         Double[] verticalPoints = {100.0, 0.0, 100.0, 42.0};
-        Double[] horizontalPoints = {0.0, 100.0, 45.0, 100.0};
+        Double[] horizontalPoints = {0.0, 100.0, 42.0, 100.0};
 
         grid.getStyleClass().add("game-grid");
         grid.setAlignment(Pos.CENTER);
-
+        
         HBox hboxTop = new HBox();
         hboxTop.setPadding(new Insets(30, 12, 0, 12));
         hboxTop.setSpacing(10);
         hboxTop.setAlignment(Pos.CENTER);
         hboxTop.setStyle("-fx-background-color: #000000;");
 
+        Button btnSave = new Button("Save");
+        btnSave.setTooltip(new Tooltip("Sauvegarder niveau"));
+        btnSave.setPrefSize(100, 20);
+        btnSave.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
+        
+        Button btnLoad = new Button("Load");
+        btnLoad.setTooltip(new Tooltip("Charger niveau"));
+        btnLoad.setPrefSize(100, 20);
+        btnLoad.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
+        
         Text levelText = new Text("Niveau "+currentLevel);
         levelText.setFont(Font.font("Verdana", 20));
         levelText.setTextAlignment(TextAlignment.CENTER);
         levelText.setFill(Color.WHITE);
+        
+        Button btnChangerGroup = new Button(currentGroup+" x "+currentGroup);
+        btnChangerGroup.setTooltip(new Tooltip("Changer niveau"));
+        btnChangerGroup.setPrefSize(100, 20);
+        btnChangerGroup.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                stage.setScene(scene2);
+            }
+        });
+        
+        Button btnHints = new Button("Hints");
+        btnHints.setTooltip(new Tooltip("Obtenir hint"));
+        btnHints.setPrefSize(100, 20);
+        btnHints.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
 
-        hboxTop.getChildren().addAll(levelText);
+            }
+        });
         
         HBox hboxBottom = new HBox();
         hboxBottom.setPadding(new Insets(15, 12, 15, 12));
@@ -100,6 +157,8 @@ public class VueControleur extends Application {
         hboxBottom.setStyle("-fx-background-color: #000000;");
 
         Button btnNiveauPrec = new Button("🡸");
+        btnNiveauPrec.setDisable((currentLevel == 1));
+        Button btnNiveauSuiv = new Button("🡺");
         btnNiveauPrec.setTooltip(new Tooltip("Niveau précédent"));
         btnNiveauPrec.setPrefSize(100, 20);
         btnNiveauPrec.setOnAction(new EventHandler<ActionEvent>() {
@@ -107,7 +166,11 @@ public class VueControleur extends Application {
             public void handle(ActionEvent event) {
                 if(currentLevel > 1){
                     currentLevel--;
-                    m.modifierNiveau(currentLevel);
+                    m.modifierNiveau(currentGroup, currentLevel);
+                    btnNiveauSuiv.setDisable(false);
+                }
+                if(currentLevel == 1){
+                    btnNiveauPrec.setDisable(true);
                 }
             }
         });
@@ -122,7 +185,6 @@ public class VueControleur extends Application {
             }
         });
         
-        Button btnNiveauSuiv = new Button("🡺");
         btnNiveauSuiv.setTooltip(new Tooltip("Niveau suivant"));
         btnNiveauSuiv.setPrefSize(100, 20);
         btnNiveauSuiv.setOnAction(new EventHandler<ActionEvent>() {
@@ -130,12 +192,18 @@ public class VueControleur extends Application {
             public void handle(ActionEvent event) {
                 if(currentLevel < 4){
                     currentLevel++;
-                    m.modifierNiveau(currentLevel);
-                }   
+                    m.modifierNiveau(currentGroup, currentLevel);
+                    btnNiveauPrec.setDisable(false);
+                }
+                if(currentLevel == 4){
+                    btnNiveauSuiv.setDisable(true);
+                }
             }
         });
-        
+        hboxTop.getChildren().addAll(btnSave, btnLoad, levelText, btnChangerGroup, btnHints);
         hboxBottom.getChildren().addAll(btnNiveauPrec, btnReinitialiser, btnNiveauSuiv);
+        hboxTop.setAlignment(Pos.CENTER);
+        hboxBottom.setAlignment(Pos.CENTER);
         
         border.setTop(hboxTop);
         border.setBottom(hboxBottom);
@@ -146,9 +214,12 @@ public class VueControleur extends Application {
             public void update(Observable o, Object arg) {
                 
                 levelText.setText("Niveau "+currentLevel);
+                btnChangerGroup.setText(currentGroup+" x "+currentGroup);
                 
-                for (int column = 0; column < grilleSize; column++) {
-                    for (int row = 0; row < grilleSize; row++) {
+                System.err.println("m.jeu.grille.getTaille() = "+m.jeu.grille.getTaille());
+                
+                for (int column = 0; column < m.jeu.grille.getTaille(); column++) {
+                    for (int row = 0; row < m.jeu.grille.getTaille(); row++) {
 
                         final int fColumn = column;
                         final int fRow = row;
@@ -160,15 +231,15 @@ public class VueControleur extends Application {
                         Rectangle rect = new Rectangle(0, 0, 58, 58);
 
                         if(fId > 0){
-                            circle.setFill(m.couleur[Math.abs(fId)]);
+                            circle.setFill(couleur[Math.abs(fId)]);
                             line.getPoints().addAll(new Double[]{
                                5.0, 5.0,
                                5.0, 5.0
                             });
                             GridPane.setHalignment(line, HPos.CENTER);
-                            circle.setFill(m.couleur[Math.abs(fId)]);
+                            circle.setFill(couleur[Math.abs(fId)]);
                         }else{
-                            circle.setFill(m.couleur[0]);
+                            circle.setFill(couleur[0]);
                             /*System.err.println("m.currentR = "+m.currentR+", m.lastR = "+m.lastR+", m.currentC = "+m.currentC+", m.lastC = "+m.lastC);
                             if(m.lastR == fRow && m.lastC != fColumn){
                                 line.getPoints().addAll(horizontalPoints);
@@ -178,10 +249,10 @@ public class VueControleur extends Application {
                             line.getPoints().addAll(horizontalPoints);
                             GridPane.setHalignment(line, HPos.CENTER);
                             GridPane.setValignment(line, VPos.CENTER);
-                            line.setStroke(m.couleur[Math.abs(fId)]);
+                            line.setStroke(couleur[Math.abs(fId)]);
                         }
                         if(m.jeu.grille.getCase(row,column).getCrossed())
-                            rect.setFill(m.backgroundCouleur[Math.abs(fId)]);
+                            rect.setFill(backgroundCouleur[Math.abs(fId)]);
                         switch (pos) {
                             case 1:
                                 line.setRotate(0);
@@ -193,14 +264,14 @@ public class VueControleur extends Application {
                                 line = new Polyline();
                                 line.getPoints().addAll(cornerPoints);
                                 line.setRotate(-90);
-                                line.setStroke(m.couleur[Math.abs(fId)]);
+                                line.setStroke(couleur[Math.abs(fId)]);
                                 GridPane.setHalignment(line, HPos.RIGHT);
                                 GridPane.setValignment(line, VPos.BOTTOM);
                                 break;
                             case 4:
                                 line = new Polyline();
                                 line.getPoints().addAll(cornerPoints);
-                                line.setStroke(m.couleur[Math.abs(fId)]);
+                                line.setStroke(couleur[Math.abs(fId)]);
                                 GridPane.setHalignment(line, HPos.LEFT);
                                 GridPane.setValignment(line, VPos.BOTTOM);
                                 break;
@@ -208,7 +279,7 @@ public class VueControleur extends Application {
                                 line = new Polyline();
                                 line.getPoints().addAll(cornerPoints);
                                 line.setRotate(-180);
-                                line.setStroke(m.couleur[Math.abs(fId)]);
+                                line.setStroke(couleur[Math.abs(fId)]);
                                 GridPane.setHalignment(line, HPos.RIGHT);
                                 GridPane.setValignment(line, VPos.TOP);
                                 break;
@@ -216,7 +287,7 @@ public class VueControleur extends Application {
                                 line = new Polyline();
                                 line.getPoints().addAll(cornerPoints);
                                 line.setRotate(90);
-                                line.setStroke(m.couleur[Math.abs(fId)]);
+                                line.setStroke(couleur[Math.abs(fId)]);
                                 GridPane.setHalignment(line, HPos.LEFT);
                                 GridPane.setValignment(line, VPos.TOP);
                                 break;
@@ -273,11 +344,31 @@ public class VueControleur extends Application {
                                 // attention, le setOnDragDone est déclenché par la source du Drag&Drop
                                 m.stopDD(fColumn, fRow);
                                 if(m.jeu.partieTerminee()){
-                                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                    alert.setTitle("Partie gagner!");
-                                    alert.setContentText("I have a great message for you!");
 
-                                    alert.showAndWait();
+                                    ButtonType btnAlertReinitialiser = new ButtonType("Réinitialiser", ButtonBar.ButtonData.OK_DONE);
+                                    
+                                    ButtonType btnAlertNiveauSuiv = new ButtonType("Niveau suivant", ButtonBar.ButtonData.CANCEL_CLOSE);
+                                    Alert alert;
+
+                                    if(currentLevel >= 4){
+                                        alert = new Alert(AlertType.INFORMATION, " ",
+                                            btnAlertReinitialiser);
+                                    }else{
+                                        alert = new Alert(AlertType.INFORMATION, " ",
+                                            btnAlertReinitialiser, btnAlertNiveauSuiv);
+                                    }     
+                                            
+                                    alert.setTitle("Partie gagnée!");
+                                    alert.setHeaderText(null);
+                                    Optional<ButtonType> result = alert.showAndWait();                                        
+                                    
+                                    if (result.orElse(btnAlertNiveauSuiv) == btnAlertReinitialiser) {
+                                        m.reinitGrille();
+                                    }else{
+                                        currentLevel++;
+                                        btnNiveauPrec.setDisable(false);
+                                        m.modifierNiveau(currentGroup, currentLevel);
+                                    }
                                 }
                             }
                         });
@@ -304,7 +395,7 @@ public class VueControleur extends Application {
                 final int fId = m.jeu.grille.getCase(row,column).getId();
                 
                 Circle circle = new Circle(20, 20, 20);
-                circle.setFill(m.couleur[Math.abs(fId)]);
+                circle.setFill(couleur[Math.abs(fId)]);
                 tabCircles[column][row] = circle;
                 Pane pane = new Pane();
                 
@@ -354,12 +445,97 @@ public class VueControleur extends Application {
         }
         
         border.setCenter(grid);
+        return border;
+    }
+    
+    @Override
+    public void start(Stage stage) {
+        
+        //Scene 1
+        Button group3 = new Button("Grille 3 x 3");
+        group3.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                currentGroup = 3;
+                currentLevel = 1;
+                scene = new Scene(Jeu(currentGroup, currentLevel, stage), 500, 500, Color.BLACK);
+                scene.getStylesheets().add("mvc/game.css");
+                stage.setScene(scene);
+            }
+        });
+        
+        Button group4= new Button("Grille 4 x 4");
+        group4.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                currentGroup = 4;
+                currentLevel = 1;
+                scene = new Scene(Jeu(currentGroup, currentLevel, stage), 500, 500, Color.BLACK);
+                scene.getStylesheets().add("mvc/game.css");
+                stage.setScene(scene);
+            }
+        });
+        Button group5 = new Button("Grille 5 x 5");
+        group5.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                currentGroup = 5;
+                currentLevel = 1;
+                scene = new Scene(Jeu(currentGroup, currentLevel, stage), 500, 500, Color.BLACK);
+                scene.getStylesheets().add("mvc/game.css");
+                stage.setScene(scene);
+            }
+        });
+        
+        HBox hBoxTopPane2 = new HBox();
+        hBoxTopPane2.setPadding(new Insets(30, 12, 0, 12));
+        hBoxTopPane2.setSpacing(10);
+        hBoxTopPane2.setAlignment(Pos.CENTER);
+        hBoxTopPane2.setStyle("-fx-background-color: #000000;");
 
-        Scene scene = new Scene(border, (m.jeu.grille.getTaille() * 60) + 100, (m.jeu.grille.getTaille() * 60) + 140, Color.BLACK);
+        Text textTitre = new Text("Casse-tête - Lignes");
+        textTitre.setFont(Font.font("Verdana", 40));
+        textTitre.setTextAlignment(TextAlignment.CENTER);
+        textTitre.setFill(Color.WHITE);
+        
+        hBoxTopPane2.getChildren().addAll(textTitre);
+        
+        VBox vBoxCenterPane2 = new VBox();
+        vBoxCenterPane2.setPadding(new Insets(30, 12, 0, 12));
+        vBoxCenterPane2.setSpacing(10);
+        vBoxCenterPane2.setAlignment(Pos.CENTER);
+        vBoxCenterPane2.setStyle("-fx-background-color: #000000;");        
+        vBoxCenterPane2.getChildren().addAll(group3, group4, group5);
+        
+        VBox vBoxBottomPane2 = new VBox();
+        vBoxBottomPane2.setPadding(new Insets(30, 12, 0, 12));
+        vBoxBottomPane2.setSpacing(10);
+        vBoxBottomPane2.setAlignment(Pos.CENTER);
+        vBoxBottomPane2.setStyle("-fx-background-color: #000000;");
+
+        Text textCredits = new Text("Khaled ABDRABO 11713323\n Mohamed Salem MESSOUD 11714033");
+        textCredits.setFont(Font.font("Verdana", 15));
+        textCredits.setTextAlignment(TextAlignment.CENTER);
+        textCredits.setFill(Color.WHITE);
+        
+        Text textCredits2 = new Text("Projet LIFAP7 - POO, 2019");
+        textCredits2.setFont(Font.font("Verdana", 15));
+        textCredits2.setTextAlignment(TextAlignment.CENTER);
+        textCredits2.setFill(Color.WHITE);
+        
+        vBoxBottomPane2.getChildren().addAll(textCredits, textCredits2);
+        
+        BorderPane pane2 = new BorderPane();
+        pane2.setStyle("-fx-background-color: black; -fx-padding: 10 ;");
+        pane2.setTop(hBoxTopPane2);
+        pane2.setCenter(vBoxCenterPane2);
+        pane2.setBottom(vBoxBottomPane2);
+        scene2= new Scene(pane2,500,500);
+        scene2.getStylesheets().add("mvc/game.css");
+        
         stage.setTitle("Projet LIFAP7");
-        scene.getStylesheets().add("mvc/game.css");
         stage.setResizable(false);
-        stage.setScene(scene);
+        stage.setScene(scene2);
         stage.show();
     }
 

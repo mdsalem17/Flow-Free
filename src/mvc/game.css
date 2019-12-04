@@ -52,3 +52,10 @@ and open the template in the editor.
     -fx-text-fill: black;
     -fx-border-color: #ffffff;
 }
+
+.button:hover {
+    -fx-background-color: white;
+    -fx-border-style: solid, segments(1, 2);
+    -fx-text-fill: black;
+    -fx-border-color: #ffffff;
+}
