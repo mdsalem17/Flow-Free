@@ -6,6 +6,9 @@
 package jeu;
 
 import cases.Case;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -64,6 +67,20 @@ public class Chemin {
         if(i < trajet.size()){
             return trajet.get(i);
         }else throw new IndexOutOfBoundsException("Error: IndexOutOfBoundsException "+trajet.get(i).getX()+", "+trajet.get(i).getY());
+    }
+    
+    public void saveCheminToFile (String filename, boolean b) throws IOException{
+        BufferedWriter outputWriter = null;
+        outputWriter = new BufferedWriter(new FileWriter(filename, b));
+        for (int i = 0; i < trajet.size(); i++) {
+            outputWriter.write( getCaseTrajet(i).getId() + ","
+                                + getCaseTrajet(i).getX() + ","
+                                + getCaseTrajet(i).getY() + ";");
+        }
+        outputWriter.write( '\n');
+
+        outputWriter.flush();
+        outputWriter.close();
     }
     
     public int getCheminShape(int indice){

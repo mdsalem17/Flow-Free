@@ -10,8 +10,10 @@ import cases.CaseSymbol;
 import cases.CaseChemin;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -99,6 +101,29 @@ public class Grille {
         }
 
         return grid;
+    }
+    
+    public int[][] getGridValues(){
+        int tabPlateau[][] = new int[n][n];
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                tabPlateau[i][j] = plateau[i][j].getId();
+            }
+        }        
+        return tabPlateau;
+    }
+    
+    public void saveGridToFile (String filename, int x[][]) throws IOException{
+        BufferedWriter outputWriter = null;
+            outputWriter = new BufferedWriter(new FileWriter(filename));
+            for (int i = 0; i < x.length; i++) {
+                for(int j =0; j < x.length; j++) {
+                    outputWriter.write(x[i][j] + " ");
+                }
+                outputWriter.write( '\n');
+            }
+            outputWriter.flush();
+            outputWriter.close();
     }
 
     @Override

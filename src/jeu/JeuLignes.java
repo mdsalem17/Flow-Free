@@ -1,6 +1,7 @@
 package jeu;
 
 import cases.Case;
+import java.io.IOException;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -27,6 +28,19 @@ public class JeuLignes {
     private void initTabChemin(){
         for(int i = 0 ; i < grille.getNbCaseSymbol(); i++){
             tabChemins[i] = new Chemin();
+        }
+    }
+    
+    public void saveGameToFile () throws IOException{
+        String filename = "./ressources/saved_games/une_partie";
+        String ter = ".txt";
+        grille.saveGridToFile(filename+ter, grille.getGridValues());
+        for(int i=0; i<tabChemins.length; i++){
+            boolean b;
+            if (i==0) b =false;
+            else b = true;
+            String tc = filename + "_chemins" + ter;
+            tabChemins[i].saveCheminToFile(tc, b);
         }
     }
     

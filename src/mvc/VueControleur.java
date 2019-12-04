@@ -6,9 +6,12 @@
  */
 package mvc;
 
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
@@ -67,19 +70,17 @@ public class VueControleur extends Application {
         couleur[0] = Color.TRANSPARENT;
         couleur[1] = Color.BLUE;
         couleur[2] = Color.RED;
-        couleur[3] = Color.LIGHTSEAGREEN;
-        couleur[4] = Color.DARKORCHID;
-        couleur[5] = Color.HOTPINK;
-        couleur[6] = Color.LIGHTSEAGREEN;
+        couleur[3] = new Color(0, 0.90, 0.23, 1);
+        couleur[4] = new Color(1, 0.5, 0, 1);
+        couleur[5] = new Color(0.68, 0.12, 0.68, 1);
         
         backgroundCouleur = new Color[7];
         backgroundCouleur[0] = Color.TRANSPARENT;
         backgroundCouleur[1] = new Color(0, 0, 0.4, 1);
         backgroundCouleur[2] = new Color(0.4, 0, 0, 0.5);
-        backgroundCouleur[3] = new Color(0, 0.4, 0, 0.5);
-        backgroundCouleur[4] = new Color(0, 0, 0.4, 1);
-        backgroundCouleur[5] = new Color(0, 0, 0.2, 1);
-        backgroundCouleur[6] = new Color(0.2, 0, 0, 1);
+        backgroundCouleur[3] = new Color(0, 0.90, 0.23, 0.3);
+        backgroundCouleur[4] = new Color(1, 0.5, 0, 0.3);
+        backgroundCouleur[5] = new Color(0.68, 0.12, 0.68, 0.3);
         
         // initialisation du modèle que l'on souhaite utiliser
         m = new Modele(group, level);
@@ -112,7 +113,22 @@ public class VueControleur extends Application {
         btnSave.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                ButtonType btnAlertContinuer = new ButtonType("Continuer partie", ButtonBar.ButtonData.CANCEL_CLOSE);
+                ButtonType btnAlertMenu = new ButtonType("Revenir au menu", ButtonBar.ButtonData.OK_DONE);
+                Alert alert;
+                try {
+                    m.jeu.saveGameToFile();
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(VueControleur.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                alert = new Alert(AlertType.INFORMATION, "Partie enregistrée\nVeuillez cliquer sur « Continuer partie » pour continuer",
+                        btnAlertContinuer, btnAlertMenu);
+                alert.setHeaderText(null);
+                Optional<ButtonType> result = alert.showAndWait();
+                if(result.get() == btnAlertMenu){
+                    stage.setScene(scene2);
+                }
             }
         });
         
