@@ -25,14 +25,11 @@ public class Modele extends Observable {
     
     public Modele(int selectedGroup, int selectedLevel){
         jeu = new JeuLignes(selectedGroup, selectedLevel);
-        
         canBeDragged = true;
         caseDebutPassed = 0;
     }
     
     public void startDD(int c, int r) {
-        // TODO
-        System.out.println("startDD : " + r + "-" + c);
         firstC = c;
         firstR = r;
         currentC = c;
@@ -40,17 +37,14 @@ public class Modele extends Observable {
         setChanged();
         caseDebutCourant = new CaseSymbol(jeu.grille.getCase(r, c).getId(), r, c);
         caseDebutPassed = 1;
-        System.err.println("caseDebutPassed => "+caseDebutPassed);
         jeu.appliquerViderChemin(jeu.tabChemins[caseDebutCourant.getId()-1]);
         jeu.tabChemins[caseDebutCourant.getId()-1].viderChemin();
         notifyObservers();
     }
     
     public void parcoursDD(int c, int r) {
-        // TODO        
         lastC = c;
         lastR = r;
-        System.out.println("parcoursDD : " + r + "-" + c);
         if(canBeDragged && jeu.grille.isChemin(currentR, currentC) &&
                 (jeu.grille.getCase(currentR, currentC).getId() == 0 || Math.abs(jeu.grille.getCase(currentR, currentC).getId()) == caseDebutCourant.getId() )){
             jeu.grille.setCaseId(-caseDebutCourant.getId(), currentR, currentC);
@@ -58,12 +52,10 @@ public class Modele extends Observable {
             canBeDragged = false;
         }
         if(!canBeDragged){
-            System.err.println("illegal case got passed");
             return;
         }
         if(currentR != r || currentC != c && canBeDragged){
             jeu.tabChemins[caseDebutCourant.getId()-1].ajouter(jeu.tabChemins[caseDebutCourant.getId()-1].getTrajetSize(), jeu.grille.getCase(currentR, currentC));
-            System.err.println("after ajouter "+currentR+", "+currentC);
             jeu.tabChemins[caseDebutCourant.getId()-1].removeDuplicate();
             canBeDragged = jeu.modifTrajet(caseDebutCourant, canBeDragged);
             jeu.appliquerChemin();
@@ -72,10 +64,7 @@ public class Modele extends Observable {
             currentC = c;
             
             /*if(jeu.grille.getCase(currentR, currentC).getId() == caseDebutCourant.getId() && jeu.grille.isSymbol(currentR, currentC)){
-                System.err.println("if test: jeu.grille.getCase(currentR, currentC).getId() = "+jeu.grille.getCase(currentR, currentC).getId()+" jeu.grille.isSymbol(currentR, currentC) = "+jeu.grille.isSymbol(currentR, currentC));
-                System.err.println("if test: currentR = "+currentR+" currentC = "+currentC);
                 caseDebutPassed++;
-                System.err.println("caseDebutPassed => "+caseDebutPassed);
             }*/
         }
         setChanged();
@@ -83,9 +72,6 @@ public class Modele extends Observable {
     }    
 
     public void stopDD(int c, int r) {
-        // TODO
-        System.out.println("stopDD : " + r + "-" + c + " -> " + lastR + "-" + lastC);
-        
         if(currentR != r || currentC != c && canBeDragged){
             jeu.tabChemins[caseDebutCourant.getId()-1].ajouter(jeu.tabChemins[caseDebutCourant.getId()-1].getTrajetSize(), jeu.grille.getCase(currentR, currentC));
             jeu.tabChemins[caseDebutCourant.getId()-1].removeDuplicate();
@@ -98,15 +84,6 @@ public class Modele extends Observable {
         caseDebutPassed = 0;
         setChanged();
         notifyObservers();
-
-        System.out.println(jeu.grille.toString());
-        System.out.print("Trajet Size = "+jeu.tabChemins[caseDebutCourant.getId()-1].getTrajetSize()+"\n[");
-        for(int i = 0; i < jeu.tabChemins[caseDebutCourant.getId()-1].getTrajetSize() ; i++){
-            System.out.print("( ("+jeu.tabChemins[caseDebutCourant.getId()-1].getCaseTrajet(i).getId()+"), "
-                    +jeu.tabChemins[caseDebutCourant.getId()-1].getCaseTrajet(i).getX()+", "+
-                    jeu.tabChemins[caseDebutCourant.getId()-1].getCaseTrajet(i).getY()+" ("+jeu.tabChemins[caseDebutCourant.getId()-1].getCaseTrajet(i).getPosition()+") ), ");
-        }
-        System.out.print("]");
     }
     
     public void reinitGrille(){

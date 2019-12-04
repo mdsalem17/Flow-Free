@@ -17,11 +17,9 @@ public class JeuLignes {
     public Chemin tabChemins[];
     
     public JeuLignes(int group, int level){
-        System.err.println("costrctor JeuLignes group "+group);
         grille = new Grille(group);
         grille.init(level);
         System.out.println(grille.toString());
-        System.out.println(grille.getNbCaseSymbol());
         tabChemins = new Chemin[grille.getNbCaseSymbol()];
         initTabChemin();
     }

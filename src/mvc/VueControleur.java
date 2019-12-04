@@ -116,16 +116,6 @@ public class VueControleur extends Application {
             }
         });
         
-        Button btnLoad = new Button("Load");
-        btnLoad.setTooltip(new Tooltip("Charger niveau"));
-        btnLoad.setPrefSize(100, 20);
-        btnLoad.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-            }
-        });
-        
         Text levelText = new Text("Niveau "+currentLevel);
         levelText.setFont(Font.font("Verdana", 20));
         levelText.setTextAlignment(TextAlignment.CENTER);
@@ -138,16 +128,6 @@ public class VueControleur extends Application {
             @Override
             public void handle(ActionEvent event) {
                 stage.setScene(scene2);
-            }
-        });
-        
-        Button btnHints = new Button("Hints");
-        btnHints.setTooltip(new Tooltip("Obtenir hint"));
-        btnHints.setPrefSize(100, 20);
-        btnHints.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
             }
         });
         
@@ -200,7 +180,7 @@ public class VueControleur extends Application {
                 }
             }
         });
-        hboxTop.getChildren().addAll(btnSave, btnLoad, levelText, btnChangerGroup, btnHints);
+        hboxTop.getChildren().addAll(btnSave, levelText, btnChangerGroup);
         hboxBottom.getChildren().addAll(btnNiveauPrec, btnReinitialiser, btnNiveauSuiv);
         hboxTop.setAlignment(Pos.CENTER);
         hboxBottom.setAlignment(Pos.CENTER);
@@ -215,9 +195,7 @@ public class VueControleur extends Application {
                 
                 levelText.setText("Niveau "+currentLevel);
                 btnChangerGroup.setText(currentGroup+" x "+currentGroup);
-                
-                System.err.println("m.jeu.grille.getTaille() = "+m.jeu.grille.getTaille());
-                
+                                
                 for (int column = 0; column < m.jeu.grille.getTaille(); column++) {
                     for (int row = 0; row < m.jeu.grille.getTaille(); row++) {
 
@@ -308,14 +286,15 @@ public class VueControleur extends Application {
                             pane.getStyleClass().add("first-row");
                         }
 
-                        grid.setHalignment(circle, HPos.CENTER);
-                        grid.setHalignment(rect, HPos.CENTER);
+                        GridPane.setHalignment(circle, HPos.CENTER);
+                        GridPane.setHalignment(rect, HPos.CENTER);
                         grid.add(pane, column, row);
                         grid.add(tabRects[column][row], column, row);
                         grid.add(tabLines[column][row], column, row);
                         grid.add(tabCircles[column][row], column, row);
 
                         circle.setOnDragDetected(new EventHandler<MouseEvent>() {
+                            @Override
                             public void handle(MouseEvent event) {
 
                                 //Detecter si le drag commence d'une case Symbole ou pas
@@ -331,6 +310,7 @@ public class VueControleur extends Application {
                         });
 
                         circle.setOnDragEntered(new EventHandler<DragEvent>() {
+                            @Override
                             public void handle(DragEvent event) {
 
                                 m.parcoursDD(fColumn, fRow);
@@ -339,6 +319,7 @@ public class VueControleur extends Application {
                         });
 
                         circle.setOnDragDone(new EventHandler<DragEvent>() {
+                            @Override
                             public void handle(DragEvent event) {
 
                                 // attention, le setOnDragDone est déclenché par la source du Drag&Drop
@@ -411,6 +392,7 @@ public class VueControleur extends Application {
                 grid.add(pane, column, row);
                 
                 circle.setOnDragDetected(new EventHandler<MouseEvent>() {
+                    @Override
                     public void handle(MouseEvent event) {
 
                         //Detecter si le drag commence d'une case Symbole ou pas
@@ -426,6 +408,7 @@ public class VueControleur extends Application {
                 });
 
                 circle.setOnDragEntered(new EventHandler<DragEvent>() {
+                    @Override
                     public void handle(DragEvent event) {
                         
                         m.parcoursDD(fColumn, fRow);
@@ -434,6 +417,7 @@ public class VueControleur extends Application {
                 });
                 
                 circle.setOnDragDone(new EventHandler<DragEvent>() {
+                    @Override
                     public void handle(DragEvent event) {
                         
                         // attention, le setOnDragDone est déclenché par la source du Drag&Drop
@@ -441,7 +425,7 @@ public class VueControleur extends Application {
                         
                     }
                 });
-                grid.setHalignment(circle, HPos.CENTER);
+                GridPane.setHalignment(circle, HPos.CENTER);
                 grid.add(tabCircles[column][row], column, row);
             }
         }
@@ -462,7 +446,7 @@ public class VueControleur extends Application {
             public void handle(ActionEvent event) {
                 currentGroup = 3;
                 currentLevel = 1;
-                scene = new Scene(Jeu(currentGroup, currentLevel, stage), 500, 500, Color.BLACK);
+                scene = new Scene(Jeu(currentGroup, currentLevel, stage), 450, 500, Color.BLACK);
                 scene.getStylesheets().add("mvc/game.css");
                 stage.setScene(scene);
             }
@@ -476,7 +460,7 @@ public class VueControleur extends Application {
             public void handle(ActionEvent event) {
                 currentGroup = 4;
                 currentLevel = 1;
-                scene = new Scene(Jeu(currentGroup, currentLevel, stage), 500, 500, Color.BLACK);
+                scene = new Scene(Jeu(currentGroup, currentLevel, stage), 450, 500, Color.BLACK);
                 scene.getStylesheets().add("mvc/game.css");
                 stage.setScene(scene);
             }
@@ -489,7 +473,7 @@ public class VueControleur extends Application {
             public void handle(ActionEvent event) {
                 currentGroup = 5;
                 currentLevel = 1;
-                scene = new Scene(Jeu(currentGroup, currentLevel, stage), 500, 500, Color.BLACK);
+                scene = new Scene(Jeu(currentGroup, currentLevel, stage), 450, 500, Color.BLACK);
                 scene.getStylesheets().add("mvc/game.css");
                 stage.setScene(scene);
             }
@@ -538,7 +522,7 @@ public class VueControleur extends Application {
         pane2.setTop(hBoxTopPane2);
         pane2.setCenter(vBoxCenterPane2);
         pane2.setBottom(vBoxBottomPane2);
-        scene2= new Scene(pane2,500,500);
+        scene2= new Scene(pane2,450,500);
         scene2.getStylesheets().add("mvc/game.css");
         
         stage.setTitle("Projet LIFAP7");

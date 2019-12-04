@@ -27,7 +27,6 @@ public class Grille {
     private int nbCaseSymbol;
     
     public Grille(int _n){
-        System.err.println("costrctor Grille _n "+_n);
         n = _n;
         nbCaseSymbol = 0;
         plateau = new Case[n][n];
@@ -75,7 +74,6 @@ public class Grille {
             }
         }
         nbCaseSymbol = nbCaseSymbol/2;
-        System.out.println(Arrays.deepToString(grid));
     }
     
     public static int[][] readGridFromFile(int gridSize, int gridNumber){
