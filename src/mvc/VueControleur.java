@@ -66,7 +66,7 @@ public class VueControleur extends Application {
     
     public BorderPane Jeu(int group, int level, Stage stage){
         
-        couleur = new Color[7];
+        couleur = new Color[6];
         couleur[0] = Color.TRANSPARENT;
         couleur[1] = Color.BLUE;
         couleur[2] = Color.RED;
@@ -74,7 +74,7 @@ public class VueControleur extends Application {
         couleur[4] = new Color(1, 0.5, 0, 1);
         couleur[5] = new Color(0.68, 0.12, 0.68, 1);
         
-        backgroundCouleur = new Color[7];
+        backgroundCouleur = new Color[6];
         backgroundCouleur[0] = Color.TRANSPARENT;
         backgroundCouleur[1] = new Color(0, 0, 0.4, 1);
         backgroundCouleur[2] = new Color(0.4, 0, 0, 0.5);
