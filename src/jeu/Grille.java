@@ -15,7 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -63,14 +62,14 @@ public class Grille {
         plateau[x][y].setId(_id);
     }
     
-    public void init(int level){      
-        int[][] grid = readGridFromFile(n, level);
-        for(int i=0; i<grid.length; i++){
-            for(int j=0; j<grid.length; j++){
-                if(grid[i][j]==0) {
-                    plateau[i][j] = new CaseChemin(grid[i][j], i, j);
+    public void init(int level){   
+        readGridFromFile(n, level);
+        for(int i=0; i<plateau.length; i++){
+            for(int j=0; j<plateau.length; j++){
+                if(plateau[i][j].getId()==0) {
+                    plateau[i][j] = new CaseChemin(plateau[i][j].getId(), i, j);
                 } else {
-                    plateau[i][j] = new CaseSymbol(grid[i][j], i, j);
+                    plateau[i][j] = new CaseSymbol(plateau[i][j].getId(), i, j);
                     nbCaseSymbol++;
                 }
             }
@@ -78,10 +77,10 @@ public class Grille {
         nbCaseSymbol = nbCaseSymbol/2;
     }
     
-    public static int[][] readGridFromFile(int gridSize, int gridNumber){
-        int[][] grid = new int[gridSize][gridSize];
+    private void readGridFromFile(int gridSize, int gridNumber){
         FileReader inputFile;
-
+        int currentId = 0;
+        
         try {
             inputFile = new FileReader(".\\ressources\\level_" + gridSize + "x" + gridSize
                     +"\\" + gridNumber + ".txt") ;
@@ -90,40 +89,27 @@ public class Grille {
                 for (int i = 0; i < gridSize; i++) {
                     String[] line = sc.nextLine().trim().split(" ");
                     for (int j = 0; j < gridSize; j++) {
-                        grid[i][j] = Integer.parseInt(line[j]);
+                        currentId = Integer.parseInt(line[j]);
+                        plateau[i][j] = new Case(currentId, i, j) ;
                     }
                 }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
-        return grid;
     }
     
-    public int[][] getGridValues(){
-        int tabPlateau[][] = new int[n][n];
-        for(int i=0; i<n; i++){
-            for(int j=0; j<n; j++){
-                tabPlateau[i][j] = plateau[i][j].getId();
-            }
-        }        
-        return tabPlateau;
-    }
-    
-    public void saveGridToFile (String filename, int x[][]) throws IOException{
+    public void saveGridToFile (String filename) throws IOException{
         BufferedWriter outputWriter = null;
-            outputWriter = new BufferedWriter(new FileWriter(filename));
-            for (int i = 0; i < x.length; i++) {
-                for(int j =0; j < x.length; j++) {
-                    outputWriter.write(x[i][j] + " ");
-                }
-                outputWriter.write( '\n');
+        outputWriter = new BufferedWriter(new FileWriter(filename));
+        for (int i = 0; i < plateau.length; i++) {
+            for(int j =0; j < plateau.length; j++) {
+                outputWriter.write(plateau[i][j].getId() + " ");
             }
-            outputWriter.flush();
-            outputWriter.close();
+            outputWriter.write( '\n');
+        }
+        outputWriter.flush();
+        outputWriter.close();
     }
 
     @Override

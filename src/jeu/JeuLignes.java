@@ -34,7 +34,7 @@ public class JeuLignes {
     public void saveGameToFile () throws IOException{
         String filename = "./ressources/saved_games/une_partie";
         String ter = ".txt";
-        grille.saveGridToFile(filename+ter, grille.getGridValues());
+        grille.saveGridToFile(filename+ter);
         for(int i=0; i<tabChemins.length; i++){
             boolean b;
             if (i==0) b =false;
@@ -153,4 +153,3 @@ public class JeuLignes {
     }
     
 }
-

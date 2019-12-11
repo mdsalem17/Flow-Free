@@ -117,8 +117,7 @@ public class VueControleur extends Application {
                 ButtonType btnAlertMenu = new ButtonType("Revenir au menu", ButtonBar.ButtonData.OK_DONE);
                 Alert alert;
                 try {
-                    m.jeu.saveGameToFile();
-                    
+                    m.jeu.saveGameToFile();    
                 } catch (IOException ex) {
                     Logger.getLogger(VueControleur.class.getName()).log(Level.SEVERE, null, ex);
                 }
